@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "693942396461",
+    "project_id": "shopnpay-1f1ee",
+    "storage_bucket": "shopnpay-1f1ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693942396461:android:00698040eecf7ce0583aa4",
+        "android_client_info": {
+          "package_name": "com.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2tQtDS9bTjOBhPx7D8cucYaDWqqlwYls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
