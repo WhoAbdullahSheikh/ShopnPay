@@ -5,8 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Cart from './CartScreen';
 import ProfileScreen from './ProfileScreen'; // Replace with the correct path to ProfileScreen.js
 import Colors from "../../src/utilities/Color"
-import barcode from "./CameraScreen"
-import BarcodeScanner from './CameraScreen';
+import barcode from "./BarcodeScreen"
+import BarcodeScanner from './BarcodeScreen';
 const Tab = createBottomTabNavigator();
 
 function HomeScreen({navigation, isDarkMode}) {

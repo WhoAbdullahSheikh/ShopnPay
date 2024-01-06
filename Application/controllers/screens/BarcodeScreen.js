@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
-
-
 const BarcodeScanner = () => {
   const cameraRef = useRef(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -28,7 +26,7 @@ const BarcodeScanner = () => {
   };
 
   const [isComponentMounted, setIsComponentMounted] = useState(true);
-  // Cleanup function to stop and release camera resources when component is unmounted
+  // Cleanup function to stop and release camera resources when the component is unmounted
   useEffect(() => {
     return () => {
       if (isComponentMounted) {
@@ -46,19 +44,17 @@ const BarcodeScanner = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Barcode Scanner</Text>
-
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.button} onPress={handleScanButtonPress}>
+        <TouchableOpacity style={styles.Scanbutton} onPress={handleScanButtonPress}>
           <Text style={styles.buttonText}>Scan Code</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.flashButton} onPress={handleToggleFlash}>
+      </View>
+      <TouchableOpacity style={styles.flashButton} onPress={handleToggleFlash}>
           <Text style={styles.buttonText}>
             {isFlashOn ? 'Turn Off Flash' : 'Turn On Flash'}
           </Text>
         </TouchableOpacity>
-      </View>
 
       {isCameraOpen && (
         <RNCamera
@@ -68,12 +64,15 @@ const BarcodeScanner = () => {
           onBarCodeRead={handleBarcodeScan}
           captureAudio={true}
           flashMode={isFlashOn ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
-          // Use setFlash prop to toggle the flashlight
           setFlash={isFlashOn}
         >
           <BarcodeMask />
         </RNCamera>
       )}
+
+      <View style={styles.instructionsContainer}>
+        <Text style={styles.instructions}>* Place the product a little far from camera *</Text>
+      </View>
 
       {scannedBarcode && (
         <View style={styles.resultContainer}>
@@ -90,19 +89,19 @@ const BarcodeScanner = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
+  
   buttonRow: {
     flexDirection: 'row',
-    marginBottom: 20,
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 70,
+    marginBottom: 10,
+    paddingLeft: 140,
   },
-  button: {
+  Scanbutton: {
     backgroundColor: '#A52A2A',
     padding: 15,
     borderRadius: 10,
@@ -112,14 +111,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#A52A2A',
     padding: 15,
     borderRadius: 10,
+    marginBottom: 20,
+    
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
   },
   camera: {
-    flex: 1,
-    width: '100%',
+    width: '90%', 
+    aspectRatio: 4/4, 
+    borderRadius: 20, 
+    overflow: 'hidden', 
+   
+  },
+  instructionsContainer: {
+    marginBottom: 20,
+    paddingTop: 10,
+    
+  },
+  instructions: {
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   resultContainer: {
     position: 'absolute',

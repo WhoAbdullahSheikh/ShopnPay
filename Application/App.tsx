@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Image, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import BarcodeScan from './controllers/screens/CameraScreen'
+import BarcodeScan from './controllers/screens/BarcodeScreen'
 import MainAppScreen from './controllers/screens/MainAppScreen';
 import RegisterScreen from './controllers/screens/RegisterScreen';
 import LoginScreen from './controllers/screens/LoginScreen';
 import OtpScreen from './controllers/otp/OtpScreen';
 import { RNCamera } from 'react-native-camera';
 import Credentials from './controllers/screens/Credentials';
-import Launch from './controllers/screens/Launch';
+import Launch from './controllers/screens/LaunchScreen';
 const Stack = createStackNavigator();
 
 const greyTheme = {
@@ -38,7 +38,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="MainScreen"
+        initialRouteName="barcode"
         screenOptions={{
           headerStyle: {
             backgroundColor: greyTheme.backgroundColor,
