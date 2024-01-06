@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Cart from './CartScreen';
 import ProfileScreen from './ProfileScreen'; // Replace with the correct path to ProfileScreen.js
 import Colors from "../../src/utilities/Color"
+import barcode from "./CameraScreen"
+import BarcodeScanner from './CameraScreen';
 const Tab = createBottomTabNavigator();
 
 function HomeScreen({navigation, isDarkMode}) {
@@ -106,7 +108,7 @@ export default function MainAppScreen() {
       alignItems: 'center',
     },
     tabBarStyle: {
-      backgroundColor: isDarkMode ? '#1F1B24' : '#E26310', // Use the same dark grey
+      backgroundColor: isDarkMode ? '#1F1B24' : '#A52A2A', //Theme main color
     },
     tabBarLabel: {
       color: isDarkMode ? 'white' : 'white',
@@ -127,16 +129,25 @@ export default function MainAppScreen() {
           name="Home"
           options={{
             tabBarIcon: ({color, size}) => (
-              <Icon name="home" size={size} color={color} />
+              <Icon name="home" size={size} color="white" />
             ),
           }}>
           {props => <HomeScreen {...props} isDarkMode={isDarkMode} />}
         </Tab.Screen>
         <Tab.Screen
+        name="Scan"
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <Icon name="barcode" size={size} color="white" />
+          ),
+        }}>
+          {props => <BarcodeScanner {...props} isDarkMode={isDarkMode} />}
+        </Tab.Screen>
+        <Tab.Screen
           name="Cart"
           options={{
             tabBarIcon: ({color, size}) => (
-              <Icon name="shopping-cart" size={size} color={color} />
+              <Icon name="shopping-cart" size={size} color="white" />
             ),
           }}>
           {props => <Cart {...props} isDarkMode={isDarkMode} />}
@@ -145,7 +156,7 @@ export default function MainAppScreen() {
           name="Profile"
           options={{
             tabBarIcon: ({color, size}) => (
-              <Icon name="user" size={size} color={color} />
+              <Icon name="user" size={size} color="white" />
             ),
           }}>
           {props => <ProfileScreen {...props} isDarkMode={isDarkMode} />}

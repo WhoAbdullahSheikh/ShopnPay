@@ -4,6 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to scan barcodes.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to the microphone for recording audio.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Application</string>
 	<key>CFBundleExecutable</key>

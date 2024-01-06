@@ -2,16 +2,18 @@ import * as React from 'react';
 import { Image, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import BarcodeScan from './controllers/screens/BarcodeScanner'
+import BarcodeScan from './controllers/screens/CameraScreen'
 import MainAppScreen from './controllers/screens/MainAppScreen';
 import RegisterScreen from './controllers/screens/RegisterScreen';
 import LoginScreen from './controllers/screens/LoginScreen';
 import OtpScreen from './controllers/otp/OtpScreen';
-
+import { RNCamera } from 'react-native-camera';
+import Credentials from './controllers/screens/Credentials';
+import Launch from './controllers/screens/Launch';
 const Stack = createStackNavigator();
 
 const greyTheme = {
-  backgroundColor: '#E26310', // Greyish black for the background
+  backgroundColor: '#A52A2A', // Greyish black for the background
   textColor: 'white',
 };
 
@@ -36,13 +38,22 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="barcode"
+        initialRouteName="MainScreen"
         screenOptions={{
           headerStyle: {
             backgroundColor: greyTheme.backgroundColor,
           },
           headerTintColor: greyTheme.textColor,
         }}>
+        <Stack.Screen
+          name="Launch"
+          component={Launch}
+          options={{ headerTitle: () => <HeaderWithImage />,
+          headerLeft: () => null,
+         }}
+
+       
+        />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -62,6 +73,16 @@ const App = () => {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
+          options={{ 
+            headerTitle: () => <HeaderWithImage />,
+            headerLeft: () => null,
+        }}
+          
+        />
+
+        <Stack.Screen
+          name="Credentials"
+          component={Credentials}
           options={{ 
             headerTitle: () => <HeaderWithImage />,
             headerLeft: () => null,

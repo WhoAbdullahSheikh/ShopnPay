@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from "react-native";
 import { doc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
-
+import credentials from "./Credentials";
 import { db } from "../components/config";
 import { Alert } from "react-native";
 import OtpScreen from "../otp/OtpScreen";
@@ -52,7 +52,7 @@ const RegisterPage = ({ navigation }) => {
         console.log("Register success");
         setContact("");
 
-        //navigation.navigate("otp");
+        navigation.navigate(credentials);
       })
       .catch((error) => {
         console.error("Error adding user data:", error);
@@ -140,15 +140,18 @@ const styles = StyleSheet.create({
   },
   
   button: {
-    backgroundColor: "black",
+    
     width: 300,
     padding: 10,
     marginTop: 10,
     borderRadius: 10,
+    backgroundColor: '#A52A2A',
+    
   },
   buttonText: {
     color: "white",
     textAlign: "center",
+    fontWeight: "bold",
   },
   link: {
     color: "black",
