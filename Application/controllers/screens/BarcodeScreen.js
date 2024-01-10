@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const BarcodeScanner = ({ navigation }) => {
   const cameraRef = useRef(null);
@@ -17,7 +18,6 @@ const BarcodeScanner = ({ navigation }) => {
 
   const handleScanButtonPress = () => {
     setIsCameraOpen(true);
-    // Ensure the flashlight is off when starting a new scan
     if (cameraRef.current && isFlashOn) {
       setIsFlashOn(false);
     }
@@ -28,7 +28,6 @@ const BarcodeScanner = ({ navigation }) => {
   };
 
   const handleAddToCart = () => {
-    // Implement logic to add the product to the cart
     navigation.navigate('Cart', { scannedBarcode });
     setIsConfirmationModalVisible(false);
     setScannedBarcode(null);
@@ -38,7 +37,7 @@ const BarcodeScanner = ({ navigation }) => {
     setIsConfirmationModalVisible(false);
     setScannedBarcode(null);
   };
-  
+
   const handleCloseCamera = () => {
     setIsCameraOpen(false);
   };
@@ -64,14 +63,13 @@ const BarcodeScanner = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.Scanbutton} onPress={handleScanButtonPress}>
+        <TouchableOpacity style={styles.scanButton} onPress={handleScanButtonPress}>
           <Text style={styles.buttonText}>Scan Code</Text>
         </TouchableOpacity>
-        <View style={{ flex: 1 }} />
       </View>
       <TouchableOpacity style={styles.flashButton} onPress={handleToggleFlash}>
         <Text style={styles.buttonText}>
-          {isFlashOn ? 'Turn Off Flash' : 'Turn On Flash'}
+          <Icon name={isFlashOn ? 'flash' : 'flash-off'} size={24} color="white" />
         </Text>
       </TouchableOpacity>
 
@@ -83,18 +81,19 @@ const BarcodeScanner = ({ navigation }) => {
           onBarCodeRead={handleBarcodeScan}
           captureAudio={true}
           flashMode={isFlashOn ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
-          autoFocus={RNCamera.Constants.AutoFocus.on} // Enable autoFocus
-          autoFocusPointOfInterest={{ x: 0.5, y: 0.5 }} // Center of the view
+          autoFocus={RNCamera.Constants.AutoFocus.on}
+          autoFocusPointOfInterest={{ x: 0.5, y: 0.5 }}
           iosCameraParams={{
-            focusDepth: 0.05, // Experiment with different values
-          }}
-        >
+            focusDepth: 0.05,
+          }}>
           <BarcodeMask />
         </RNCamera>
       )}
 
       <View style={styles.instructionsContainer}>
-        <Text style={styles.instructions}>* Place the product a little far from the camera *</Text>
+        <Text style={styles.instructions}>
+          * Place the product a little far from the camera *
+        </Text>
       </View>
 
       {isConfirmationModalVisible && (
@@ -102,15 +101,20 @@ const BarcodeScanner = ({ navigation }) => {
           animationType="slide"
           transparent={true}
           visible={isConfirmationModalVisible}
-          onRequestClose={() => setIsConfirmationModalVisible(false)}
-        >
+          onRequestClose={() => setIsConfirmationModalVisible(false)}>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.resultText}>Scanned Barcode: {scannedBarcode}</Text>
-              <TouchableOpacity style={styles.modalButton} onPress={handleAddToCart}>
+              <Text style={styles.resultText}>
+                Scanned Barcode: {scannedBarcode}
+              </Text>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleAddToCart}>
                 <Text style={styles.buttonText}>Add to Cart</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.modalButton} onPress={handleCancelScan}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleCancelScan}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -133,36 +137,34 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center', // Center the items vertically
+    alignItems: 'center',
     width: '100%',
     paddingHorizontal: 20,
     marginBottom: 10,
   },
-  backIcon: {
-    paddingTop: 10,
-  },
-  Scanbutton: {
+  scanButton: {
     backgroundColor: '#A52A2A',
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
-    marginLeft: 120,
-
+    marginLeft: 125,
   },
   flashButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
     backgroundColor: '#A52A2A',
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
-    marginBottom: 20,
   },
   buttonText: {
     color: 'white',
     fontSize: 18,
   },
   camera: {
-    width: '95%', 
-    aspectRatio: 16/11, 
-    borderRadius: 20, 
-    overflow: 'hidden', 
+    width: '95%',
+    aspectRatio: 16 / 11,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   instructionsContainer: {
     marginBottom: 20,
@@ -211,7 +213,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     backgroundColor: '#A52A2A',
-    padding: 15,
+    padding: 10,
+    paddingLeft: 25,
+    paddingRight: 25,
     borderRadius: 10,
   },
 });
