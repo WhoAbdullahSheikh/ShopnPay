@@ -69,7 +69,7 @@ const BarcodeScanner = ({ navigation }) => {
       </View>
       <TouchableOpacity style={styles.flashButton} onPress={handleToggleFlash}>
         <Text style={styles.buttonText}>
-          <Icon name={isFlashOn ? 'flash' : 'flash-off'} size={24} color="white" />
+          <Icon name={isFlashOn ? 'flash' : 'flash-off'} size={24} color="#A52A2A" />
         </Text>
       </TouchableOpacity>
 
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     right: 20,
-    backgroundColor: '#A52A2A',
+    //backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
   },
