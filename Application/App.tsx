@@ -8,20 +8,20 @@ import RegisterScreen from './controllers/screens/RegisterScreen';
 import LoginScreen from './controllers/screens/LoginScreen';
 import OtpScreen from './controllers/otp/OtpScreen';
 import Credentials from './controllers/screens/Credentials';
+import SplashScreen from './controllers/screens/SplashScreen';
 import Launch from './controllers/screens/LaunchScreen';
-import CartScreen from './controllers/screens/CartScreen'; // Import CartScreen
-//import { CartProvider } from './controllers/screens/CartContext'; // Update with the correct path
+import CartScreen from './controllers/screens/CartScreen';
 
 const Stack = createStackNavigator();
 
 const greyTheme = {
-  backgroundColor: '#A52A2A', // Greyish black for the background
+  backgroundColor: '#A52A2A',
   textColor: 'white',
 };
 
 const ShopNPayLogo = () => (
   <Image
-    source={require('./pics/mainlogo-white.png')} // Update the path to your image
+    source={require('./pics/mainlogo-white.png')}
     style={{
       width: 150,
       height: 60,
@@ -39,9 +39,8 @@ const HeaderWithImage = () => (
 const App = () => {
   return (
     <NavigationContainer>
-      
       <Stack.Navigator
-        initialRouteName="MainScreen"
+        initialRouteName="Splash"
         screenOptions={{
           headerStyle: {
             backgroundColor: greyTheme.backgroundColor,
@@ -49,20 +48,24 @@ const App = () => {
           headerTintColor: greyTheme.textColor,
         }}>
         <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="Launch"
           component={Launch}
-          options={{ headerTitle: () => <HeaderWithImage />,
-          headerLeft: () => null,
-         }}
-
-       
+          options={{
+            headerTitle: () => <HeaderWithImage />,
+            headerLeft: () => null,
+          }}
         />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{ headerTitle: () => <HeaderWithImage />,
-          headerLeft: () => null,
-         }}
+          options={{ headerTitle: () => <HeaderWithImage />, headerLeft: () => null }}
         />
         <Stack.Screen
           name="MainScreen"
@@ -73,44 +76,41 @@ const App = () => {
             gestureEnabled: false,
           }}
         />
-        
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          options={{ 
+          options={{
             headerTitle: () => <HeaderWithImage />,
             headerLeft: () => null,
-        }}
+          }}
         />
-
         <Stack.Screen
           name="Credentials"
           component={Credentials}
-          options={{ 
+          options={{
             headerTitle: () => <HeaderWithImage />,
             headerLeft: () => null,
-        }}
-          
+          }}
         />
-       <Stack.Screen
+        <Stack.Screen
           name="barcode"
           component={BarcodeScan}
-          options={{ headerTitle: () => <HeaderWithImage />,
-          headerLeft: () => null,
-         }}
+          options={{
+            headerTitle: () => <HeaderWithImage />,
+            headerLeft: () => null,
+          }}
         />
         <Stack.Screen
           name="otp"
           component={OtpScreen}
-          options={{ headerTitle: () => <HeaderWithImage />,
-          headerLeft: () => null,
-         }}
+          options={{
+            headerTitle: () => <HeaderWithImage />,
+            headerLeft: () => null,
+          }}
         />
-        
       </Stack.Navigator>
-      
     </NavigationContainer>
   );
-}
+};
 
 export default App;

@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontWeight: "bold",
     color: "black",
+    fontFamily: 'Raleway-Regular',
   },
   selectContainer: {
     flexDirection: "row",
