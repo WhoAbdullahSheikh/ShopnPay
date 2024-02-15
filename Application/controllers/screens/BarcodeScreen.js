@@ -1,17 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
-import { RNCamera } from 'react-native-camera';
+import React, {useState, useRef, useEffect} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import {RNCamera} from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const BarcodeScanner = ({ navigation }) => {
+const BarcodeScanner = ({navigation}) => {
   const cameraRef = useRef(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
-  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
+    useState(false);
 
-  const handleBarcodeScan = ({ data }) => {
+  const handleBarcodeScan = ({data}) => {
     setScannedBarcode(data);
     setIsConfirmationModalVisible(true);
   };
@@ -28,7 +29,7 @@ const BarcodeScanner = ({ navigation }) => {
   };
 
   const handleAddToCart = () => {
-    navigation.navigate('Cart', { scannedBarcode });
+    navigation.navigate('Cart', {scannedBarcode});
     setIsConfirmationModalVisible(false);
     setScannedBarcode(null);
   };
@@ -63,13 +64,19 @@ const BarcodeScanner = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.scanButton} onPress={handleScanButtonPress}>
+        <TouchableOpacity
+          style={styles.scanButton}
+          onPress={handleScanButtonPress}>
           <Text style={styles.buttonText}>Scan Code</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.flashButton} onPress={handleToggleFlash}>
         <Text style={styles.buttonText}>
-          <Icon name={isFlashOn ? 'flash' : 'flash-off'} size={24} color="#A52A2A" />
+          <Icon
+            name={isFlashOn ? 'flash' : 'flash-off'}
+            size={24}
+            color="#A52A2A"
+          />
         </Text>
       </TouchableOpacity>
 
@@ -80,9 +87,13 @@ const BarcodeScanner = ({ navigation }) => {
           type={RNCamera.Constants.Type.back}
           onBarCodeRead={handleBarcodeScan}
           captureAudio={true}
-          flashMode={isFlashOn ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
-          autoFocus={RNCamera.Constants.AutoFocus.on}
-          autoFocusPointOfInterest={{ x: 0.5, y: 0.5 }}
+          flashMode={
+            isFlashOn
+              ? RNCamera.Constants.FlashMode.torch
+              : RNCamera.Constants.FlashMode.off
+          }
+          autoFocus={RNCamera.Constants.AutoFocus.on} // Disable autofocus
+          autoFocusPointOfInterest={{x: 0.5, y: 0.5}}
           iosCameraParams={{
             focusDepth: 0.05,
           }}>
@@ -186,7 +197,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   resultText: {
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     marginBottom: 20,
   },

@@ -19,18 +19,20 @@ const LoginPage = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Contact"
+        placeholderTextColor="#888"
         value={contact}
         onChangeText={setContact}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#888"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>LOGIN</Text>
       </TouchableOpacity>
       
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
@@ -51,6 +53,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontWeight: 'bold',
     color: 'black',
+    fontFamily: "Raleway-Regular",
  },
  input: {
     borderWidth: 1,
@@ -61,16 +64,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
  },
  button: {
-    backgroundColor: 'black',
+
     width: '80%',
     padding: 10,
     marginTop: 10,
     borderRadius: 10,
+    backgroundColor: "#A52A2A",
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 6,
+      height: 2,
+    },
+    shadowOpacity: 0.6,
     
  },
  buttonText: {
     color: 'white',
     textAlign: 'center',
+    fontWeight: 'bold',
  },
  link: {
     marginTop: 20,

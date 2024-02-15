@@ -11,12 +11,13 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		18005CE92B7986E700951DF2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18005CE82B7986E700951DF2 /* GoogleService-Info.plist */; };
 		18E4029A2B0161C600DDA1D6 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 18E402992B0161C600DDA1D6 /* Fonts */; };
-		18E402A32B04057000DDA1D6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18E402A22B04057000DDA1D6 /* GoogleService-Info.plist */; };
+		40C7FC982B954210BED43276 /* Raleway-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A48573469D99458684251D8E /* Raleway-Bold.ttf */; };
+		4A0DDDF377294737AFE6573F /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84EF012F7FAC431FB6809E18 /* Raleway-Regular.ttf */; };
 		5EB5BD7E37E8EF1F6BF66EBF /* libPods-Application-ApplicationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 08C7874ECE3BD8DFA1AED897 /* libPods-Application-ApplicationTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CCAF40805B492B3D4909C743 /* libPods-Application.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FD700CC757711CA1877740E /* libPods-Application.a */; };
-		4A0DDDF377294737AFE6573F /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84EF012F7FAC431FB6809E18 /* Raleway-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,15 +42,16 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Application/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Application/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Application/main.m; sourceTree = "<group>"; };
+		18005CE82B7986E700951DF2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		18E402992B0161C600DDA1D6 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
-		18E402A22B04057000DDA1D6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1A5E3E8E4CCF6A547562197B /* Pods-Application.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application.debug.xcconfig"; path = "Target Support Files/Pods-Application/Pods-Application.debug.xcconfig"; sourceTree = "<group>"; };
 		2FD700CC757711CA1877740E /* libPods-Application.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Application.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Application/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		84EF012F7FAC431FB6809E18 /* Raleway-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-Regular.ttf"; path = "../assets/fonts/Raleway-Regular.ttf"; sourceTree = "<group>"; };
+		A48573469D99458684251D8E /* Raleway-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Raleway-Bold.ttf"; path = "../assets/fonts/Raleway-Bold.ttf"; sourceTree = "<group>"; };
 		EADE44C9203DDA85CF552266 /* Pods-Application-ApplicationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-ApplicationTests.debug.xcconfig"; path = "Target Support Files/Pods-Application-ApplicationTests/Pods-Application-ApplicationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F009993C23B9BE1C36D3E630 /* Pods-Application-ApplicationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Application-ApplicationTests.release.xcconfig"; path = "Target Support Files/Pods-Application-ApplicationTests/Pods-Application-ApplicationTests.release.xcconfig"; sourceTree = "<group>"; };
-		84EF012F7FAC431FB6809E18 /* Raleway-Regular.ttf */ = {isa = PBXFileReference; name = "Raleway-Regular.ttf"; path = "../assets/fonts/Raleway-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +94,7 @@
 		13B07FAE1A68108700A75B9A /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				18E402A22B04057000DDA1D6 /* GoogleService-Info.plist */,
+				18005CE82B7986E700951DF2 /* GoogleService-Info.plist */,
 				18E402992B0161C600DDA1D6 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -158,13 +160,13 @@
 			sourceTree = "<group>";
 		};
 		BC1A6A62AB7D465CA27CFB81 /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 				84EF012F7FAC431FB6809E18 /* Raleway-Regular.ttf */,
+				A48573469D99458684251D8E /* Raleway-Bold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -265,10 +267,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				18E4029A2B0161C600DDA1D6 /* Fonts in Resources */,
-				18E402A32B04057000DDA1D6 /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				4A0DDDF377294737AFE6573F /* Raleway-Regular.ttf in Resources */,
+				40C7FC982B954210BED43276 /* Raleway-Bold.ttf in Resources */,
+				18005CE92B7986E700951DF2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,6 +609,7 @@
 				INFOPLIST_FILE = Application/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShopnPay;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -636,6 +640,7 @@
 				INFOPLIST_FILE = Application/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ShopnPay;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -703,7 +708,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -778,7 +783,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",

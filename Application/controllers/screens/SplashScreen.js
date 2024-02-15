@@ -6,7 +6,7 @@ const SplashScreen = ({ navigation }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [visibleText, setVisibleText] = useState('');
 
-  const textToType = 'Your Next Step to Comfort...'; // Replace with your desired text
+  const textToType = 'Your Next Step to Comfort...'; 
 
   useEffect(() => {
     const navigateToNextScreen = () => {
@@ -38,7 +38,7 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <LinearGradient
-      colors={['#A52A2A', '#FFFFFF']} // Replace with your desired gradient colors
+      colors={['#FFFFFF', '#FFFFFF']} // Replace with your desired gradient colors
       style={styles.container}>
       <Animated.Image
         source={require('./../../pics/mainlogo.png')} // Replace with the path to your image
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   artwork: {
     width: 350,

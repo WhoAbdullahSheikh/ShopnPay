@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { Image, View } from 'react-native';
+import { Image, View, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import BarcodeScan from './controllers/screens/BarcodeScreen';
 import MainAppScreen from './controllers/screens/MainAppScreen';
 import RegisterScreen from './controllers/screens/RegisterScreen';
 import LoginScreen from './controllers/screens/LoginScreen';
-import OtpScreen from './controllers/otp/OtpScreen';
+//import PhoneSignIn from './controllers/screens/PhoneSignIn';
 import Credentials from './controllers/screens/Credentials';
 import SplashScreen from './controllers/screens/SplashScreen';
 import Launch from './controllers/screens/LaunchScreen';
 import CartScreen from './controllers/screens/CartScreen';
+import ProfileScree from './controllers/screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,7 @@ const HeaderWithImage = () => (
 const App = () => {
   return (
     <NavigationContainer>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{
@@ -65,6 +67,11 @@ const App = () => {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          options={{ headerTitle: () => <HeaderWithImage />, headerLeft: () => null}}
+        />
+         <Stack.Screen
+          name="Profile"
+          component={LoginScreen}
           options={{ headerTitle: () => <HeaderWithImage />, headerLeft: () => null }}
         />
         <Stack.Screen
@@ -82,6 +89,7 @@ const App = () => {
           options={{
             headerTitle: () => <HeaderWithImage />,
             headerLeft: () => null,
+            
           }}
         />
         <Stack.Screen
@@ -100,14 +108,7 @@ const App = () => {
             headerLeft: () => null,
           }}
         />
-        <Stack.Screen
-          name="otp"
-          component={OtpScreen}
-          options={{
-            headerTitle: () => <HeaderWithImage />,
-            headerLeft: () => null,
-          }}
-        />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );
