@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,16 +7,16 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  ImageBackground,
 } from 'react-native';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db } from '../components/config';
+import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
+import {db} from '../components/config';
 
-
-const RegisterPage = ({ navigation }) => {
+const RegisterPage = ({navigation}) => {
   const [contact, setContact] = useState('');
   const [countryCode, setCountryCode] = useState('+92');
 
-  const handleContactChange = (inputText) => {
+  const handleContactChange = inputText => {
     const numericInput = inputText.replace(/[^0-9]/g, '');
     if (/^\d{0,10}$/.test(numericInput)) {
       setContact(numericInput);
@@ -29,12 +29,12 @@ const RegisterPage = ({ navigation }) => {
       Alert.alert('Please enter a phone number.');
       return;
     }
-  
+
     // Add user data to Firestore
     const userData = {
       phoneNumber: phoneNumber,
     };
-  
+
     try {
       const documentRef = doc(db, 'customers', 'details');
       await updateDoc(documentRef, {
@@ -43,19 +43,18 @@ const RegisterPage = ({ navigation }) => {
       console.log('User data added to Firestore');
       console.log('Register success');
       setContact('');
-  
+
       // Navigate to the Credentials screen only if the user has successfully registered the phone number
-      navigation.navigate('Credentials', { phoneNumber: phoneNumber });
+      navigation.navigate('Credentials', {phoneNumber: phoneNumber});
     } catch (error) {
       console.error('Error adding user data:', error);
     }
   };
-  
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>REGISTRATION</Text>
+        <Text style={styles.title}>Get Started</Text>
         <View style={styles.selectContainer}>
           <View style={styles.countryCodeBox}>
             <Text style={styles.countryCodeText}>+92</Text>
@@ -63,7 +62,7 @@ const RegisterPage = ({ navigation }) => {
           <TextInput
             value={contact}
             onChangeText={handleContactChange}
-            placeholder='Enter number'
+            placeholder="Enter number"
             placeholderTextColor="#888"
             style={styles.input}
             keyboardType="phone-pad"
@@ -72,10 +71,13 @@ const RegisterPage = ({ navigation }) => {
         </View>
 
         <TouchableOpacity style={styles.button} onPress={registerUser}>
-          <Text style={styles.buttonText}>NEXT</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.link}>Already have an account? Login</Text>
+          <Text style={styles.link}>
+            Already have an account?{' '}
+            <Text style={styles.loginText}>Log In</Text>
+          </Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -90,15 +92,22 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 250,
+    paddingTop: 230,
     alignItems: 'center',
   },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    opacity: 0.7,
+  },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
-    fontWeight: 'bold',
+    fontSize: 35,
+    marginBottom: 40,
     color: 'black',
-  
+    fontFamily: 'Raleway-Bold',
+   
   },
   selectContainer: {
     flexDirection: 'row',
@@ -113,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'black',
     borderWidth: 1,
-    height: 40,
+    height: 45,
   },
   countryCodeText: {
     fontSize: 16,
@@ -125,9 +134,9 @@ const styles = StyleSheet.create({
     width: '60%',
     marginBottom: 10,
     padding: 10,
-    height: 40,
+    height: 45,
     borderRadius: 10,
-    
+    fontSize: 15,
   },
   button: {
     width: 300,
@@ -145,11 +154,19 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontSize: 20,
   },
   link: {
     color: 'black',
     marginTop: 20,
+    fontFamily: 'Raleway-Regular',
+    fontSize: 15,
+  },
+  loginText: {
+    fontFamily: 'Raleway-Regular',
+    color: '#A52A2A',
+    fontWeight: 'bold',
+    
   },
 });
 
