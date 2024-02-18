@@ -1,18 +1,26 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
-import {RNCamera} from 'react-native-camera';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const BarcodeScanner = ({navigation}) => {
+const BarcodeScanner = ({ navigation }) => {
   const cameraRef = useRef(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
-  const [isConfirmationModalVisible, setIsConfirmationModalVisible] =
-    useState(false);
+  const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
 
-  const handleBarcodeScan = ({data}) => {
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      // Turn off flash when navigating away from the scanner page
+      setIsFlashOn(false);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleBarcodeScan = ({ data }) => {
     setScannedBarcode(data);
     setIsConfirmationModalVisible(true);
   };
@@ -29,7 +37,7 @@ const BarcodeScanner = ({navigation}) => {
   };
 
   const handleAddToCart = () => {
-    navigation.navigate('Cart', {scannedBarcode});
+    navigation.navigate('Cart', { scannedBarcode });
     setIsConfirmationModalVisible(false);
     setScannedBarcode(null);
   };
@@ -42,24 +50,6 @@ const BarcodeScanner = ({navigation}) => {
   const handleCloseCamera = () => {
     setIsCameraOpen(false);
   };
-
-  const [isComponentMounted, setIsComponentMounted] = useState(true);
-
-  useEffect(() => {
-    return () => {
-      if (isComponentMounted) {
-        if (cameraRef.current) {
-          cameraRef.current.release();
-        }
-      }
-    };
-  }, [isComponentMounted]);
-
-  useEffect(() => {
-    return () => {
-      setIsComponentMounted(false);
-    };
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -92,8 +82,8 @@ const BarcodeScanner = ({navigation}) => {
               ? RNCamera.Constants.FlashMode.torch
               : RNCamera.Constants.FlashMode.off
           }
-          autoFocus={RNCamera.Constants.AutoFocus.on} // Disable autofocus
-          autoFocusPointOfInterest={{x: 0.5, y: 0.5}}
+          autoFocus={true} // Disable autofocus
+          autoFocusPointOfInterest={{ x: 0.5, y: 0.5 }}
           iosCameraParams={{
             focusDepth: 0.05,
           }}>

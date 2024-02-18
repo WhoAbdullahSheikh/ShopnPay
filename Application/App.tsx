@@ -42,7 +42,7 @@ const App = () => {
     <NavigationContainer>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <Stack.Navigator
-        initialRouteName="Splash"
+        initialRouteName="MainScreen"
         screenOptions={{
           headerStyle: {
             backgroundColor: greyTheme.backgroundColor,
