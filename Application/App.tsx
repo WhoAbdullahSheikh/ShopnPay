@@ -11,7 +11,7 @@ import Credentials from './controllers/screens/Credentials';
 import SplashScreen from './controllers/screens/SplashScreen';
 import Launch from './controllers/screens/LaunchScreen';
 import CartScreen from './controllers/screens/CartScreen';
-import ProfileScree from './controllers/screens/ProfileScreen';
+import ProfileScreen from './controllers/screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -71,7 +71,7 @@ const App = () => {
         />
          <Stack.Screen
           name="Profile"
-          component={LoginScreen}
+          component={ProfileScreen}
           options={{ headerTitle: () => <HeaderWithImage />, headerLeft: () => null }}
         />
         <Stack.Screen

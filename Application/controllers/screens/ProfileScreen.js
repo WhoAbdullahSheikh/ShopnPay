@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Button, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import * as ImagePicker from 'react-native-image-picker';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import { useNavigation } from '@react-navigation/native';
 import Colors from "../../src/utilities/Color";
 import signOutGif from '../../pics/logout.png';
+import defaultProfileImage from '../../pics/Profile.gif';
+import jsonImage from '../../pics/avatar.gif';
 
-function ProfileScreen({ isDarkMode }) {
-  const [profilePhoto, setProfilePhoto] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
+function ProfileScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const navigation = useNavigation(); // Initialize useNavigation hook
+  const navigation = useNavigation();
 
   const styles = StyleSheet.create({
     container: {
@@ -19,28 +18,32 @@ function ProfileScreen({ isDarkMode }) {
       alignItems: 'center',
       justifyContent: 'flex-start',
       paddingTop: 20,
-      backgroundColor: isDarkMode ? '#252526' : 'white',
+      backgroundColor: 'white',
     },
-    
     profilePhotoContainer: {
-      width: 150,
-      height: 150,
-      borderRadius: 75,
-      backgroundColor: 'lightgray',
+      width: 150, // Adjust based on the glow size
+      height: 150, // Adjust based on the glow size
+      borderRadius: 85, // Half of width and height to make it circular
+      backgroundColor: 'transparent', // Set transparent to see the glow effect
       justifyContent: 'center',
       alignItems: 'center',
-      overflow: 'hidden',
-      
+      shadowColor: 'black', // Glow color
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 1,
+      shadowRadius: 5, // Adjust based on the glow size
     },
     profilePhoto: {
-      width: '100%',
-      height: '100%',
-      
+      width: 150,
+      height: 150,
+      borderRadius: 100,
     },
     text: {
       fontSize: 24,
       marginBottom: 20,
-      color: isDarkMode ? 'white' : 'black',
+      color: 'black',
     },
     input: {
       marginTop: 20,
@@ -56,8 +59,8 @@ function ProfileScreen({ isDarkMode }) {
       position: 'absolute',
       top: 20,
       right: 20,
-      borderRadius: 100, // Makes the button circular
-      padding: 8, // Adjust button padding
+      borderRadius: 100,
+      padding: 8,
       borderColor: 'black',
       borderWidth: 1.5,
       shadowColor: 'black',
@@ -68,22 +71,10 @@ function ProfileScreen({ isDarkMode }) {
       shadowOpacity: 0.6,
     },
     signOutGif: {
-      width: 30, // Adjust the width and height according to your GIF size
+      width: 30,
       height: 30,
     },
   });
-
-  const options = {
-    title: 'Select Profile Photo',
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
-
-  const pickImage = () => {
-    // Image picker code...
-  };
 
   const handleSignOut = () => {
     navigation.navigate('Login');
@@ -95,16 +86,9 @@ function ProfileScreen({ isDarkMode }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={pickImage} style={styles.profilePhotoContainer}>
-        {profilePhoto ? (
-          <Image source={{ uri: profilePhoto }} style={styles.profilePhoto} />
-        ) : (
-          <Text style={{ fontSize: 16 }}>Add Profile Photo</Text>
-        )}
-      </TouchableOpacity>
-      {selectedImage && (
-        <Image source={selectedImage} style={{ width: 200, height: 200 }} />
-      )}
+      <View style={styles.profilePhotoContainer}>
+        <Image source={jsonImage} style={styles.profilePhoto} />
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -126,12 +110,17 @@ function ProfileScreen({ isDarkMode }) {
         value={phoneNumber}
         onChangeText={setPhoneNumber}
       />
-      <Button title="Save Profile" onPress={handleSave} />
-      <View style={styles.signOutButton}>
-        <TouchableOpacity onPress={handleSignOut}>
-          <Image source={signOutGif} style={styles.signOutGif} />
-        </TouchableOpacity>
-      </View>
+      <Button
+        title="Save"
+        onPress={handleSave}
+        color={Colors.primary}
+      />
+      <TouchableOpacity
+        style={styles.signOutButton}
+        onPress={handleSignOut}
+      >
+        <Image source={signOutGif} style={styles.signOutGif} />
+      </TouchableOpacity>
     </View>
   );
 }
