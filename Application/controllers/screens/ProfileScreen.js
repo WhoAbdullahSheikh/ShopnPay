@@ -1,128 +1,132 @@
-import React, { useState } from 'react';
-import { View, Text, Image, Button, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import Colors from "../../src/utilities/Color";
-import signOutGif from '../../pics/logout.png';
-import defaultProfileImage from '../../pics/Profile.gif';
 import jsonImage from '../../pics/avatar.gif';
 
-function ProfileScreen() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+const ProfileScreen = () => {
   const navigation = useNavigation();
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      paddingTop: 20,
-      backgroundColor: 'white',
-    },
-    profilePhotoContainer: {
-      width: 150, // Adjust based on the glow size
-      height: 150, // Adjust based on the glow size
-      borderRadius: 85, // Half of width and height to make it circular
-      backgroundColor: 'transparent', // Set transparent to see the glow effect
-      justifyContent: 'center',
-      alignItems: 'center',
-      shadowColor: 'black', // Glow color
-      shadowOffset: {
-        width: 0,
-        height: 0,
-      },
-      shadowOpacity: 1,
-      shadowRadius: 5, // Adjust based on the glow size
-    },
-    profilePhoto: {
-      width: 150,
-      height: 150,
-      borderRadius: 100,
-    },
-    text: {
-      fontSize: 24,
-      marginBottom: 20,
-      color: 'black',
-    },
-    input: {
-      marginTop: 20,
-      height: 40,
-      width: '80%',
-      borderColor: 'black',
-      borderWidth: 1,
-      marginBottom: 20,
-      paddingHorizontal: 10,
-      borderRadius: 8,
-    },
-    signOutButton: {
-      position: 'absolute',
-      top: 20,
-      right: 20,
-      borderRadius: 100,
-      padding: 8,
-      borderColor: 'black',
-      borderWidth: 1.5,
-      shadowColor: 'black',
-      shadowOffset: {
-        width: 3,
-        height: 2,
-      },
-      shadowOpacity: 0.6,
-    },
-    signOutGif: {
-      width: 30,
-      height: 30,
-    },
-  });
-
-  const handleSignOut = () => {
-    navigation.navigate('Login');
-  };
-
-  const handleSave = () => {
-    // Saving logic...
-  };
-
   return (
-    <View style={styles.container}>
-      <View style={styles.profilePhotoContainer}>
-        <Image source={jsonImage} style={styles.profilePhoto} />
+    <ScrollView>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back-circle" size={50} color="#A52A2A" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Account Settings</Text>
+        <Text style={styles.heading1}>Account info, Settings & More</Text>
+
+        {/* Account Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Account</Text>
+          <TouchableOpacity style={styles.button}>
+            <Image source={jsonImage} style={styles.profileImage} />
+            <Text style={styles.customerName}>John Doe</Text>
+          </TouchableOpacity>
+          {/* Section Break Line */}
+          <View style={styles.sectionBreakLine}></View>
+        </View>
+
+        {/* Other Options Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Settings</Text>
+          <TouchableOpacity style={styles.optionButton}>
+            <Icon name="notifications" size={24} color="white" />
+            <Text style={styles.optionText}>Notifications</Text>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Icon name="arrow-forward-circle" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.optionButton}>
+            <Icon name="language" size={24} color="white" />
+            <Text style={styles.optionText}>Language</Text>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Icon name="arrow-forward-circle" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.optionButton}>
+            <Icon name="lock-closed" size={24} color="white" />
+            <Text style={styles.optionText}>Privacy</Text>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Icon name="arrow-forward-circle" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.optionButton}>
+            <Icon name="information-circle" size={24} color="white" />
+            <Text style={styles.optionText}>About Us</Text>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Icon name="arrow-forward-circle" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        placeholderTextColor="#888"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#888"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Phone Number"
-        placeholderTextColor="#888"
-        value={phoneNumber}
-        onChangeText={setPhoneNumber}
-      />
-      <Button
-        title="Save"
-        onPress={handleSave}
-        color={Colors.primary}
-      />
-      <TouchableOpacity
-        style={styles.signOutButton}
-        onPress={handleSignOut}
-      >
-        <Image source={signOutGif} style={styles.signOutGif} />
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 10,
+  },
+  title: {
+    paddingTop: 10,
+    fontSize: 25,
+    fontFamily: 'Raleway-Bold',
+  },
+  heading1: {
+    fontSize: 15,
+    marginBottom: 20,
+    fontFamily: 'Raleway-Bold',
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    marginBottom: 10,
+    fontFamily: 'Raleway-Bold',
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 100,
+    borderColor: '#A52A2A',
+    borderWidth: 3,
+  },
+  customerName: {
+    fontSize: 20,
+    paddingLeft: 20,
+    fontFamily: 'Raleway-Regular',
+  },
+  sectionBreakLine: {
+    height: 1,
+    backgroundColor: '#A52A2A',
+    marginVertical: 10, 
+  },
+  optionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#A52A2A',
+    padding: 10,
+    borderRadius: 15,
+    backgroundColor: '#A52A2A',
+  },
+  optionText: {
+    marginLeft: 10,
+    fontSize: 17,
+    color: 'white',
+    fontFamily: 'Raleway-Regular',
+  },
+});
 
 export default ProfileScreen;

@@ -1,15 +1,20 @@
 import React, {useState} from 'react';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {NavigationContainer} from '@react-navigation/native';
 import {Text, View, Button, FlatList, StyleSheet, Switch} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icons from 'react-native-vector-icons/Ionicons';
 import Cart from './CartScreen';
 import ProfileScreen from './ProfileScreen'; // Replace with the correct path to ProfileScreen.js
-import Colors from "../../src/utilities/Color"
-import barcode from "./BarcodeScreen"
 import BarcodeScanner from './BarcodeScreen';
+import DashboardScreen from './navigations/Sidebar';
+import SettingsScreen from './SettingsScreen';
+
+////////////////////////////////////////////////////////////////
 const Tab = createBottomTabNavigator();
 
-function HomeScreen({navigation, isDarkMode}) {
+function HomeScreen({navigation}) {
   const [cart, setCart] = useState([]);
   const [totalBill, setTotalBill] = useState(0);
 
@@ -25,42 +30,30 @@ function HomeScreen({navigation, isDarkMode}) {
     {name: 'Product 4', price: 40},
   ];
 
+  ////////////////////////////////////////////////////////////////
   const styles = StyleSheet.create({
     card: {
-      backgroundColor: isDarkMode ? '#121212' : 'white', // Use the same dark grey
       borderRadius: 8,
       padding: 16,
       margin: 8,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
     },
     productName: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: isDarkMode ? 'white' : 'black',
     },
     productPrice: {
       fontSize: 16,
-      color: isDarkMode ? 'lime' : 'green',
+      color: 'green',
     },
     homeScreenText: {
       textAlign: 'center',
       fontSize: 24,
       fontWeight: 'bold',
-      color: isDarkMode ? 'white' : 'black',
-      backgroundColor: isDarkMode ? '#252526' : 'transparent', // Use the same dark grey
     },
   });
 
   return (
-    <View style={{flex: 1, backgroundColor: isDarkMode ? '#1F1B24' : 'white'}}>
-      
+    <View style={{flex: 1}}>
       <FlatList
         data={products}
         keyExtractor={(item, index) => index.toString()}
@@ -83,41 +76,8 @@ function HomeScreen({navigation, isDarkMode}) {
   );
 }
 
-export default function MainAppScreen() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
-  const styles = StyleSheet.create({
-    container: {
-      
-      flex: 1,
-      backgroundColor: isDarkMode ? '#566573' : 'white', // Use the same dark grey
-    },
-    darkModeText: {
-      color: isDarkMode ? 'white' : 'black',
-    },
-    darkModeContainer: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    tabBarStyle: {
-      backgroundColor: isDarkMode ? '#1F1B24' : '#A52A2A', //Theme main color
-    },
-    tabBarLabel: {
-      color: isDarkMode ? 'white' : 'white',
-    },
-    staticDarkModeText: {
-      fontWeight: 'bold',
-    },
-  });
-
+////////////////////////////////////////////////////////////////
+export default function MainAppScreen({navigation}) {
   return (
     <View style={styles.container}>
       <Tab.Navigator
@@ -127,50 +87,90 @@ export default function MainAppScreen() {
         }}>
         <Tab.Screen
           name="Home"
+          component={HomeScreen}
           options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon name="home" size={size} color="white" />
+            tabBarIcon: () => (
+              <Icon name="home" size={25} color="white" />
             ),
-          }}>
-          {props => <HomeScreen {...props} isDarkMode={isDarkMode} />}
-        </Tab.Screen>
+          }}
+        />
         <Tab.Screen
-        name="Scan"
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="barcode" size={size} color="white" />
-          ),
-        }}>
-          {props => <BarcodeScanner {...props} isDarkMode={isDarkMode} />}
-        </Tab.Screen>
+          name="Scan"
+          component={BarcodeScanner}
+          options={{
+            tabBarIcon: () => (
+              <Icon name="barcode" size={25} color="white" />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Add"
+          options={{
+            tabBarLabel:'',
+            tabBarIcon: ({color}) => (
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 10, // space from bottombar
+                  height: 50,
+                  width: 50,
+                  borderRadius: 10,
+                  backgroundColor: '#d04949',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 0,
+                  borderColor: 'white',
+                  shadowColor: 'black', // Glow color
+                  shadowOffset: {
+                    width: 0,
+                    height: 5,
+                  },
+                  shadowOpacity: 1,
+                  shadowRadius: 7,
+                }}>
+                <Icon name="barcode" color="white" size={25} />
+              </View>
+            ),
+          }}
+          component={BarcodeScanner}
+        />
         <Tab.Screen
           name="Cart"
+          component={Cart}
           options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon name="shopping-cart" size={size} color="white" />
+            tabBarIcon: () => (
+              <Icon name="shopping-cart" size={25} color="white" />
             ),
-          }}>
-          {props => <Cart {...props} isDarkMode={isDarkMode} />}
-        </Tab.Screen>
-        <Tab.Screen
-          name="Profile"
-          options={{
-            tabBarIcon: ({color, size}) => (
-              <Icon name="user" size={size} color="white" />
-            ),
-          }}>
-          {props => <ProfileScreen {...props} isDarkMode={isDarkMode} />}
-        </Tab.Screen>
-      </Tab.Navigator>
-      <View style={styles.darkModeContainer}>
-        <Text style={styles.staticDarkModeText}>Dark Mode</Text>
-        <Switch
-          value={isDarkMode}
-          onValueChange={toggleTheme}
-          trackColor={{false: '#767577', true: '#81b0ff'}}
-          thumbColor={isDarkMode ? '#f5dd4b' : '#f4f3f4'}
+          }}
         />
-      </View>
+        <Tab.Screen
+          name="My Account"
+          component={ProfileScreen}
+          options={{
+            tabBarStyle: {
+              display: "none",
+            },
+            tabBarIcon: () => (
+              <Icon name="user" size={25} color="white" />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#A52A2A',
+  },
+  tabBarStyle: {
+    backgroundColor: '#A52A2A', //Theme main color
+  },
+  tabBarLabel: {
+    color: 'white',
+    fontFamily: 'Raleway-Bold',
+  },
+ 
+});
