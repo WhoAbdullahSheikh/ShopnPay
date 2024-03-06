@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db } from '../components/config';
+import { db } from '../../components/config';
 
 const Credentials = () => {
   const [name, setName] = useState('');

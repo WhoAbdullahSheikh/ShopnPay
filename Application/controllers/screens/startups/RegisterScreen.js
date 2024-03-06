@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
+  Button,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -10,31 +11,48 @@ import {
   ImageBackground,
 } from 'react-native';
 import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
-import {db} from '../components/config';
+import {db} from '../../components/config';
+import auth from '@react-native-firebase/auth';
 
 const RegisterPage = ({navigation}) => {
   const [contact, setContact] = useState('');
   const [countryCode, setCountryCode] = useState('+92');
+  const [confirm, setConfirm] = useState(null);
 
-  const handleContactChange = inputText => {
+
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const [code, setCode] = useState('');
+  function onAuthStateChanged(user) {
+    if (user) {
+       }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+  const handleContactChange = (inputText) => {
     const numericInput = inputText.replace(/[^0-9]/g, '');
     if (/^\d{0,10}$/.test(numericInput)) {
       setContact(numericInput);
     }
   };
 
-  const registerUser = async () => {
+  async function signInWithPhoneNumber() {
     const phoneNumber = countryCode + contact;
     if (!contact.trim()) {
       Alert.alert('Please enter a phone number.');
       return;
     }
-
+  
+    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+    setConfirm(confirmation);
     // Add user data to Firestore
     const userData = {
       phoneNumber: phoneNumber,
     };
-
+  
     try {
       const documentRef = doc(db, 'customers', 'details');
       await updateDoc(documentRef, {
@@ -43,14 +61,22 @@ const RegisterPage = ({navigation}) => {
       console.log('User data added to Firestore');
       console.log('Register success');
       setContact('');
-
+  
       // Navigate to the Credentials screen only if the user has successfully registered the phone number
-      navigation.navigate('Credentials', {phoneNumber: phoneNumber});
+      
     } catch (error) {
       console.error('Error adding user data:', error);
     }
+  }
+  async function confirmCode() {
+    try {
+      await confirm.confirm(code);
+      console.log('Correct.');
+    } catch (error) {
+      console.log('Invalid code.');
+    }
   };
-
+  if (!confirm) {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -70,7 +96,7 @@ const RegisterPage = ({navigation}) => {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={registerUser}>
+        <TouchableOpacity style={styles.button} onPress={() => signInWithPhoneNumber()}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -82,6 +108,24 @@ const RegisterPage = ({navigation}) => {
       </View>
     </ScrollView>
   );
+}
+
+return (
+  <View style={styles.container}>
+    <TextInput
+      value={code}
+      onChangeText={text => setCode(text)}
+      placeholder="Enter verification code"
+      style={styles.input}
+      keyboardType="numeric"
+    />
+    <Button
+      title="Confirm Code"
+      onPress={() => confirmCode()}
+      color="#841584" // Customize button color if needed
+    />
+  </View>
+);
 };
 
 const styles = StyleSheet.create({

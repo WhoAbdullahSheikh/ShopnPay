@@ -1,5 +1,5 @@
-import * as React from 'react';
 
+import React from 'react';
 import {Image, View, StatusBar, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -19,6 +19,7 @@ import Launch from './controllers/screens/startups/LaunchScreen';
 import SettingsScreen from './controllers/screens/SettingsScreen';
 import AccInfo from './controllers/screens/navigations/AccInfo';
 import Sidebar from './controllers/screens/Sidebar';
+
 ////////////////////////////////////////////////////////////////
 //Declarations
 

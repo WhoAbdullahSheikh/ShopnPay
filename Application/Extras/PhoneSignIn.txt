@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db } from '../components/config';
+import { db } from '../controllers/components/config';
 import auth from '@react-native-firebase/auth';
 
 const RegisterPage = ({ navigation }) => {
@@ -70,11 +70,11 @@ const RegisterPage = ({ navigation }) => {
   async function confirmCode() {
     try {
       await confirm.confirm(code);
+      console.log('Correct.');
     } catch (error) {
       console.log('Invalid code.');
     }
-  }
-  ;
+  };
   
   if (!confirm) {
   return (
