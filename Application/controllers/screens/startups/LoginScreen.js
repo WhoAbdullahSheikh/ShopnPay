@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import Colors from '../../src/utilities/Color';
+
 const LoginPage = ({navigation}) => {
   const [contact, setContact] = useState('');
   const [password, setPassword] = useState('');

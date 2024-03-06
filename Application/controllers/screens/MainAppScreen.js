@@ -2,81 +2,52 @@ import React, {useState} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
-import {Text, View, Button, FlatList, StyleSheet, Switch} from 'react-native';
+import {
+  Image,
+  Text,
+  View,
+  Button,
+  FlatList,
+  StyleSheet,
+  Switch,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icons from 'react-native-vector-icons/Ionicons';
 import Cart from './CartScreen';
 import ProfileScreen from './ProfileScreen'; // Replace with the correct path to ProfileScreen.js
 import BarcodeScanner from './BarcodeScreen';
-import DashboardScreen from './navigations/Sidebar';
 import SettingsScreen from './SettingsScreen';
+import HomeScreen from './HomeScreen';
+import PromotionsScreen from './PromotionsScreen';
 
-////////////////////////////////////////////////////////////////
 const Tab = createBottomTabNavigator();
+// HEADER
+const greyTheme = {
+  backgroundColor: '#A52A2A',
+  textColor: 'white',
+};
 
-function HomeScreen({navigation}) {
-  const [cart, setCart] = useState([]);
-  const [totalBill, setTotalBill] = useState(0);
-
-  const addToCart = (productName, price) => {
-    setCart([...cart, {productName, price}]);
-    setTotalBill(totalBill + price);
-  };
-
-  const products = [
-    {name: 'Product 1', price: 10},
-    {name: 'Product 2', price: 20},
-    {name: 'Product 3', price: 30},
-    {name: 'Product 4', price: 40},
-  ];
-
-  ////////////////////////////////////////////////////////////////
-  const styles = StyleSheet.create({
-    card: {
-      borderRadius: 8,
-      padding: 16,
-      margin: 8,
-    },
-    productName: {
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    productPrice: {
-      fontSize: 16,
-      color: 'green',
-    },
-    homeScreenText: {
-      textAlign: 'center',
-      fontSize: 24,
-      fontWeight: 'bold',
-    },
-  });
-
+const HeaderWithImage = () => {
   return (
-    <View style={{flex: 1}}>
-      <FlatList
-        data={products}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <View style={styles.card}>
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>${item.price}</Text>
-            <Button
-              title="Add to Cart"
-              onPress={() => addToCart(item.name, item.price)}
-            />
-          </View>
-        )}
-      />
-      <Button
-        title="Go to Cart"
-        onPress={() => navigation.navigate('Cart', {cart, totalBill})}
-      />
+    <View>
+      <ShopNPayLogo />
     </View>
   );
-}
+};
 
-////////////////////////////////////////////////////////////////
+const ShopNPayLogo = () => (
+  <Image
+    source={require('./../../pics/mainlogo-white.png')}
+    style={{
+      width: 150,
+      height: 60,
+      resizeMode: 'contain',
+      marginBottom: 10,
+    }}
+  />
+);
+
 export default function MainAppScreen({navigation}) {
   return (
     <View style={styles.container}>
@@ -84,43 +55,47 @@ export default function MainAppScreen({navigation}) {
         screenOptions={{
           tabBarStyle: styles.tabBarStyle,
           tabBarLabelStyle: styles.tabBarLabel,
+          headerStyle: {
+            backgroundColor: greyTheme.backgroundColor,
+          },
+          headerTintColor: greyTheme.textColor,
         }}>
         <Tab.Screen
           name="Home"
           component={HomeScreen}
           options={{
+            headerTitle: () => <HeaderWithImage />,
+            tabBarIcon: () => <Icon name="home" size={25} color="white" />,
+          }}
+        />
+
+        <Tab.Screen
+          name="Cart"
+          component={Cart}
+          options={{
             tabBarIcon: () => (
-              <Icon name="home" size={25} color="white" />
+              <Icon name="shopping-cart" size={25} color="white" />
             ),
           }}
         />
         <Tab.Screen
-          name="Scan"
-          component={BarcodeScanner}
+          name="Scanning"
           options={{
-            tabBarIcon: () => (
-              <Icon name="barcode" size={25} color="white" />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Add"
-          options={{
-            tabBarLabel:'',
+            tabBarLabel: '',
             tabBarIcon: ({color}) => (
               <View
                 style={{
                   position: 'absolute',
-                  bottom: 10, // space from bottombar
-                  height: 50,
-                  width: 50,
+                  top: 5,
+                  height: 40,
+                  width: 40,
                   borderRadius: 10,
                   backgroundColor: '#d04949',
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderWidth: 0,
                   borderColor: 'white',
-                  shadowColor: 'black', // Glow color
+                  shadowColor: 'black',
                   shadowOffset: {
                     width: 0,
                     height: 5,
@@ -135,24 +110,19 @@ export default function MainAppScreen({navigation}) {
           component={BarcodeScanner}
         />
         <Tab.Screen
-          name="Cart"
-          component={Cart}
+          name="Promotions"
+          component={PromotionsScreen}
           options={{
-            tabBarIcon: () => (
-              <Icon name="shopping-cart" size={25} color="white" />
-            ),
+            tabBarIcon: () => <Icon name="bullhorn" size={25} color="white" />,
           }}
         />
         <Tab.Screen
           name="My Account"
           component={ProfileScreen}
           options={{
-            tabBarStyle: {
-              display: "none",
-            },
-            tabBarIcon: () => (
-              <Icon name="user" size={25} color="white" />
-            ),
+            headerShown: false,
+
+            tabBarIcon: () => <Icon name="user" size={25} color="white" />,
           }}
         />
       </Tab.Navigator>
@@ -166,11 +136,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#A52A2A',
   },
   tabBarStyle: {
-    backgroundColor: '#A52A2A', //Theme main color
+    backgroundColor: '#A52A2A',
   },
   tabBarLabel: {
     color: 'white',
     fontFamily: 'Raleway-Bold',
   },
- 
 });

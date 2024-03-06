@@ -4,15 +4,22 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import jsonImage from '../../pics/avatar.gif';
+import Icons from 'react-native-vector-icons/FontAwesome';
+import AccInfo from './navigations/AccInfo';
+
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+
+  const AccountInformation = () => {
+    navigation.navigate('AccountInformation');
+  };
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back-circle" size={50} color="#A52A2A" />
+        
         </TouchableOpacity>
         <Text style={styles.title}>Account Settings</Text>
         <Text style={styles.heading1}>Account info, Settings & More</Text>
@@ -22,7 +29,7 @@ const ProfileScreen = () => {
           <Text style={styles.sectionTitle}>Account</Text>
           <TouchableOpacity style={styles.button}>
             <Image source={jsonImage} style={styles.profileImage} />
-            <Text style={styles.customerName}>John Doe</Text>
+            <Text style={styles.customerName}>Abdullah Sheikh</Text>
           </TouchableOpacity>
           {/* Section Break Line */}
           <View style={styles.sectionBreakLine}></View>
@@ -31,29 +38,38 @@ const ProfileScreen = () => {
         {/* Other Options Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Settings</Text>
+
+          <TouchableOpacity  onPress={AccountInformation} style={styles.optionButton}>
+            <Icons name="user" size={18} color="white" />
+            <Text style={styles.optionText}>Account Information</Text>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Icon name="arrow-forward-circle" size={24} color="white" />
+              
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.optionButton}>
-            <Icon name="notifications" size={24} color="white" />
+            <Icon name="notifications" size={18} color="white" />
             <Text style={styles.optionText}>Notifications</Text>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.optionButton}>
-            <Icon name="language" size={24} color="white" />
+            <Icon name="language" size={18} color="white" />
             <Text style={styles.optionText}>Language</Text>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.optionButton}>
-            <Icon name="lock-closed" size={24} color="white" />
+            <Icon name="lock-closed" size={18} color="white" />
             <Text style={styles.optionText}>Privacy</Text>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.optionButton}>
-            <Icon name="information-circle" size={24} color="white" />
+            <Icon name="information-circle" size={18} color="white" />
             <Text style={styles.optionText}>About Us</Text>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
@@ -72,9 +88,10 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   title: {
-    paddingTop: 10,
+    paddingTop: 50,
     fontSize: 25,
     fontFamily: 'Raleway-Bold',
+
   },
   heading1: {
     fontSize: 15,
@@ -115,15 +132,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: '#A52A2A',
-    padding: 10,
+    padding: 8,
     borderRadius: 15,
     backgroundColor: '#A52A2A',
   },
   optionText: {
     marginLeft: 10,
-    fontSize: 17,
+    fontSize: 14,
     color: 'white',
     fontFamily: 'Raleway-Regular',
   },

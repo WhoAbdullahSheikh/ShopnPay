@@ -68,7 +68,7 @@ const Credentials = () => {
         style={styles.backgroundContainer}>
         <Animatable.Image
           ref={ref => (this.bgImageRef = ref)}
-          source={require('../../pics/shoppingstore.png')}
+          source={require('../../../pics/shoppingstore.png')}
           style={styles.backgroundImage}
           resizeMode="cover"
         />

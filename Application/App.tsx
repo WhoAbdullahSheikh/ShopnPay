@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {Image, View, StatusBar} from 'react-native';
+import {Image, View, StatusBar, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -10,14 +10,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import ProfileScreen from './controllers/screens/ProfileScreen';
 import MainAppScreen from './controllers/screens/MainAppScreen';
-import Sidebar from './controllers/screens/navigations/Sidebar';
 import BarcodeScan from './controllers/screens/BarcodeScreen';
-import RegisterScreen from './controllers/screens/RegisterScreen';
-import LoginScreen from './controllers/screens/LoginScreen';
-import Credentials from './controllers/screens/Credentials';
-import SplashScreen from './controllers/screens/SplashScreen';
-import Launch from './controllers/screens/LaunchScreen';
+import RegisterScreen from './controllers/screens/startups/RegisterScreen';
+import LoginScreen from './controllers/screens/startups/LoginScreen';
+import Credentials from './controllers/screens/startups/Credentials';
+import SplashScreen from './controllers/screens/startups/SplashScreen';
+import Launch from './controllers/screens/startups/LaunchScreen';
 import SettingsScreen from './controllers/screens/SettingsScreen';
+import AccInfo from './controllers/screens/navigations/AccInfo';
+import Sidebar from './controllers/screens/Sidebar';
 ////////////////////////////////////////////////////////////////
 //Declarations
 
@@ -42,36 +43,38 @@ const ShopNPayLogo = () => (
   />
 );
 
-const HeaderWithImage = () => (
+
+/*const HeaderWithImage = () => (
   <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 0,}}>
     <ShopNPayLogo />
   </View>
 );
-
+*/
 
 const StackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="MainScreen"
+      initialRouteName="Register"
       screenOptions={{
+        headerShown: false,
         headerStyle: {
           backgroundColor: greyTheme.backgroundColor,
+          
         },
         headerTintColor: greyTheme.textColor,
       }}>
-        
+
       <Stack.Screen
-        name="Splash"
-        component={SplashScreen}
-        options={{
-          headerShown: false,
-        }}
+       name="Splash" 
+       component={SplashScreen} 
+       options={{
+        headerLeft: () => null,
+       }}
       />
       <Stack.Screen
         name="Launch"
         component={Launch}
         options={{
-          headerTitle: () => <HeaderWithImage />,
           headerLeft: () => null,
         }}
       />
@@ -79,7 +82,6 @@ const StackScreen = () => {
         name="Login"
         component={LoginScreen}
         options={{
-          headerTitle: () => <HeaderWithImage />,
           headerLeft: () => null,
         }}
       />
@@ -87,7 +89,7 @@ const StackScreen = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          headerTitle: "Profile",
+          headerTitle: 'Profile',
           headerLeft: () => null,
         }}
       />
@@ -95,8 +97,8 @@ const StackScreen = () => {
         name="MainScreen"
         component={MainAppScreen}
         options={{
-          headerTitle: () => <HeaderWithImage />,
           headerLeft: () => null,
+        
           gestureEnabled: false,
         }}
       />
@@ -104,7 +106,6 @@ const StackScreen = () => {
         name="Register"
         component={RegisterScreen}
         options={{
-          headerTitle: () => <HeaderWithImage />,
           headerLeft: () => null,
         }}
       />
@@ -112,7 +113,6 @@ const StackScreen = () => {
         name="Credentials"
         component={Credentials}
         options={{
-          headerTitle: () => <HeaderWithImage />,
           headerLeft: () => null,
         }}
       />
@@ -120,7 +120,8 @@ const StackScreen = () => {
         name="barcode"
         component={BarcodeScan}
         options={{
-          title: 'My home',
+          
+          
           headerLeft: () => null,
         }}
       />
@@ -128,7 +129,21 @@ const StackScreen = () => {
         name="setting"
         component={SettingsScreen}
         options={{
-          headerTitle: () => <HeaderWithImage />,
+          headerLeft: () => null,
+        }}
+      />
+      <Stack.Screen
+        name="AccountInformation"
+        component={AccInfo}
+        options={{
+          headerLeft: () => null,
+        }}
+      />
+     
+      <Stack.Screen
+        name="Sidebar"
+        component={Sidebar}
+        options={{
           headerLeft: () => null,
         }}
       />
@@ -136,12 +151,7 @@ const StackScreen = () => {
   );
 };
 
-
-
-
-
-export default function App()
-{
+export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -150,8 +160,9 @@ export default function App()
           backgroundColor="transparent"
           translucent={true}
         />
-        
-      <StackScreen/>
+
+
+        <StackScreen />
       </NavigationContainer>
     </SafeAreaProvider>
   );
