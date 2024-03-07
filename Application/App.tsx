@@ -19,7 +19,7 @@ import Launch from './controllers/screens/startups/LaunchScreen';
 import SettingsScreen from './controllers/screens/SettingsScreen';
 import AccInfo from './controllers/screens/navigations/AccInfo';
 import Sidebar from './controllers/screens/Sidebar';
-
+import VerificationScreen from './controllers/screens/VerificationScreen';
 ////////////////////////////////////////////////////////////////
 //Declarations
 
@@ -55,7 +55,7 @@ const ShopNPayLogo = () => (
 const StackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Register"
+      initialRouteName="Splash"
       screenOptions={{
         headerShown: false,
         headerStyle: {
@@ -148,6 +148,14 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
+      <Stack.Screen
+        name="Verification"
+        component={VerificationScreen}
+        options={{
+          headerLeft: () => null,
+        }}
+      />
+
     </Stack.Navigator>
   );
 };

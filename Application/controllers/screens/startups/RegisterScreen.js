@@ -15,6 +15,7 @@ import {db} from '../../components/config';
 import auth from '@react-native-firebase/auth';
 import LottieView from 'lottie-react-native';
 
+
 const RegisterPage = ({navigation}) => {
   const [contact, setContact] = useState('');
   const [countryCode, setCountryCode] = useState('+92');
@@ -79,6 +80,8 @@ const RegisterPage = ({navigation}) => {
     try {
       await confirm.confirm(code);
       console.log('Correct.');
+      navigation.navigate('Verification');
+ 
     } catch (error) {
       console.log('Invalid code.');
     }
