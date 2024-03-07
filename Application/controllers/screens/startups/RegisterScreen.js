@@ -13,26 +13,34 @@ import {
 import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
 import {db} from '../../components/config';
 import auth from '@react-native-firebase/auth';
+import LottieView from 'lottie-react-native';
 
 const RegisterPage = ({navigation}) => {
   const [contact, setContact] = useState('');
   const [countryCode, setCountryCode] = useState('+92');
   const [confirm, setConfirm] = useState(null);
-
-
   const [phoneNumber, setPhoneNumber] = useState('');
-
   const [code, setCode] = useState('');
+  const [verificationText, setVerificationText] = useState('');
+
   function onAuthStateChanged(user) {
     if (user) {
-       }
+    }
   }
+
+  useEffect(() => {
+    const phoneNumberWithAsterisks = `${countryCode}******${contact.slice(-4)}`;
+    setVerificationText(
+      `We are automatically detecting a SMS sent to your mobile number ${phoneNumberWithAsterisks}`,
+    );
+  }, [contact]); // Empty dependency array ensures the effect runs only once, on mount
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
-  const handleContactChange = (inputText) => {
+
+  const handleContactChange = inputText => {
     const numericInput = inputText.replace(/[^0-9]/g, '');
     if (/^\d{0,10}$/.test(numericInput)) {
       setContact(numericInput);
@@ -45,14 +53,14 @@ const RegisterPage = ({navigation}) => {
       Alert.alert('Please enter a phone number.');
       return;
     }
-  
+
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
     setConfirm(confirmation);
     // Add user data to Firestore
     const userData = {
       phoneNumber: phoneNumber,
     };
-  
+
     try {
       const documentRef = doc(db, 'customers', 'details');
       await updateDoc(documentRef, {
@@ -61,9 +69,8 @@ const RegisterPage = ({navigation}) => {
       console.log('User data added to Firestore');
       console.log('Register success');
       setContact('');
-  
+
       // Navigate to the Credentials screen only if the user has successfully registered the phone number
-      
     } catch (error) {
       console.error('Error adding user data:', error);
     }
@@ -75,57 +82,82 @@ const RegisterPage = ({navigation}) => {
     } catch (error) {
       console.log('Invalid code.');
     }
-  };
-  if (!confirm) {
-  return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Get Started</Text>
-        <View style={styles.selectContainer}>
-          <View style={styles.countryCodeBox}>
-            <Text style={styles.countryCodeText}>+92</Text>
-          </View>
-          <TextInput
-            value={contact}
-            onChangeText={handleContactChange}
-            placeholder="Enter number"
-            placeholderTextColor="#888"
-            style={styles.input}
-            keyboardType="phone-pad"
-            maxLength={10}
-          />
-        </View>
+  }
 
-        <TouchableOpacity style={styles.button} onPress={() => signInWithPhoneNumber()}>
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+  if (!confirm) {
+    return (
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Get Started</Text>
+          <View style={styles.selectContainer}>
+            <View style={styles.countryCodeBox}>
+              <Text style={styles.countryCodeText}>+92</Text>
+            </View>
+            <TextInput
+              value={contact}
+              onChangeText={handleContactChange}
+              placeholder="Enter number"
+              placeholderTextColor="#888"
+              style={styles.input}
+              keyboardType="phone-pad"
+              maxLength={10}
+            />
+          </View>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => signInWithPhoneNumber()}>
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
           <Text style={styles.link}>
             Already have an account?{' '}
-            <Text style={styles.loginText}>Log In</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Login')}></TouchableOpacity>
+            <Text style={styles.loginText}> Log In</Text>
           </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  );
-}
+        </View>
+      </ScrollView>
+    );
+  }
 
-return (
-  <View style={styles.container}>
-    <TextInput
-      value={code}
-      onChangeText={text => setCode(text)}
-      placeholder="Enter verification code"
-      style={styles.input}
-      keyboardType="numeric"
-    />
-    <Button
-      title="Confirm Code"
-      onPress={() => confirmCode()}
-      color="#841584" // Customize button color if needed
-    />
-  </View>
-);
+  return (
+    <View style={styles.otpcontainer}>
+      <LottieView
+        style={styles.otpmessagejson}
+        source={require('../../../pics/animations/otpmessage.json')}
+        autoPlay
+        loop={true}
+      />
+
+      <Text style={styles.verifyheading}>Enter Verification Code</Text>
+      <Text style={styles.verifytext}>{verificationText}</Text>
+      <TextInput
+        value={code}
+        onChangeText={setCode}
+        placeholder="Enter verification code"
+        placeholderTextColor="#888"
+        style={styles.otpinput}
+        keyboardType="numeric"
+      />
+
+      <Text style={styles.link}>
+        Don't recieve the OTP?
+        <TouchableOpacity>
+          <Text style={styles.resendotp}> RESEND OTP</Text>
+        </TouchableOpacity>
+      </Text>
+
+      <TouchableOpacity style={styles.button} onPress={() => {
+        if (!code.trim()) {
+          Alert.alert('Verification Code Required', 'Please enter the verification code.');
+        } else {
+          confirmCode(code);
+        }
+      }}>
+        <Text style={styles.buttonText}>Confirm</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -139,6 +171,52 @@ const styles = StyleSheet.create({
     paddingTop: 230,
     alignItems: 'center',
   },
+  ////////////////////////////////
+  otpcontainer: {
+    flex: 1,
+    alignItems: 'center',
+    marginBottom: '78%',
+  },
+  resendotp: {
+    fontFamily: 'Raleway-Regular',
+    color: '#A52A2A',
+    fontWeight: 'bold',
+
+    //marginTop: 20,
+  },
+
+  otpmessagejson: {
+    flexGrow: 1,
+    width: 250,
+    marginLeft: 20,
+    marginTop: 60,
+  },
+  verifyheading: {
+    fontSize: 25,
+    fontFamily: 'Raleway-Bold',
+    marginBottom: 10,
+  },
+
+  verifytext: {
+    fontSize: 18,
+    fontFamily: 'Raleway-Regular',
+    marginLeft: 38,
+    marginRight: 38,
+    paddingBottom: 20,
+  },
+
+  otpinput: {
+    borderWidth: 1,
+    borderColor: 'black',
+    width: '80%',
+    marginBottom: 0,
+    paddingBottom: 10,
+    padding: 10,
+    height: 45,
+    borderRadius: 10,
+    fontSize: 18,
+  },
+  ////////////////////////////////
   backgroundImage: {
     flex: 1,
     width: '100%',
@@ -151,7 +229,6 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     color: 'black',
     fontFamily: 'Raleway-Bold',
-   
   },
   selectContainer: {
     flexDirection: 'row',
@@ -202,15 +279,15 @@ const styles = StyleSheet.create({
   },
   link: {
     color: 'black',
-    marginTop: 20,
+    marginTop: 17,
     fontFamily: 'Raleway-Regular',
     fontSize: 15,
+    marginBottom: 7,
   },
   loginText: {
     fontFamily: 'Raleway-Regular',
     color: '#A52A2A',
     fontWeight: 'bold',
-    
   },
 });
 
