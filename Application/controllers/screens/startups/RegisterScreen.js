@@ -14,7 +14,7 @@ import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
 import {db} from '../../components/config';
 import auth from '@react-native-firebase/auth';
 import LottieView from 'lottie-react-native';
-
+import database from '@react-native-firebase/database';
 
 const RegisterPage = ({navigation}) => {
   const [contact, setContact] = useState('');
@@ -23,6 +23,7 @@ const RegisterPage = ({navigation}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
   const [verificationText, setVerificationText] = useState('');
+  const [incorrectCode, setIncorrectCode] = useState(false);
 
   function onAuthStateChanged(user) {
     if (user) {
@@ -60,11 +61,12 @@ const RegisterPage = ({navigation}) => {
     // Add user data to Firestore
     const userData = {
       phoneNumber: phoneNumber,
+      
     };
 
     try {
       const documentRef = doc(db, 'customers', 'details');
-      await updateDoc(documentRef, {
+      await updateDoc(doc(db, 'customers', 'details'), {
         RegisteredUser: arrayUnion(userData),
       });
       console.log('User data added to Firestore');
@@ -81,9 +83,9 @@ const RegisterPage = ({navigation}) => {
       await confirm.confirm(code);
       console.log('Correct.');
       navigation.navigate('Verification');
- 
     } catch (error) {
       console.log('Invalid code.');
+      setIncorrectCode(true);
     }
   }
 
@@ -136,12 +138,20 @@ const RegisterPage = ({navigation}) => {
       <Text style={styles.verifytext}>{verificationText}</Text>
       <TextInput
         value={code}
-        onChangeText={setCode}
+        onChangeText={text => {
+          if (text.length <= 6) {
+            setCode(text);
+          }
+        }}
         placeholder="Enter verification code"
         placeholderTextColor="#888"
         style={styles.otpinput}
         keyboardType="numeric"
+        maxLength={6}
       />
+      {incorrectCode && (
+        <Text style={styles.incorrectCodeMessage}>Incorrect code. Please try again.</Text>
+      )}
 
       <Text style={styles.link}>
         Don't recieve the OTP?
@@ -150,13 +160,18 @@ const RegisterPage = ({navigation}) => {
         </TouchableOpacity>
       </Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => {
-        if (!code.trim()) {
-          Alert.alert('Verification Code Required', 'Please enter the verification code.');
-        } else {
-          confirmCode(code);
-        }
-      }}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          if (!code.trim()) {
+            Alert.alert(
+              'Verification Code Required',
+              'Please enter the verification code.',
+            );
+          } else {
+            confirmCode(code);
+          }
+        }}>
         <Text style={styles.buttonText}>Confirm</Text>
       </TouchableOpacity>
     </View>
@@ -218,6 +233,11 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 10,
     fontSize: 18,
+  },
+  incorrectCodeMessage: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 5,
   },
   ////////////////////////////////
   backgroundImage: {

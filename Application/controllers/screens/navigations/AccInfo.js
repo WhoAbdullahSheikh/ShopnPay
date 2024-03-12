@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import jsonImage from '../../../pics/avatar.gif';
 import Icons from 'react-native-vector-icons/FontAwesome';
+import TouchID from 'react-native-touch-id';
 
 const AccInfo = () => {
   const navigation = useNavigation();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,14 +8,15 @@ import {
   ScrollView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db } from '../../components/config';
+import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
+import {db} from '../../components/config';
 
-const Credentials = () => {
+const Credentials = ({}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
 
   useEffect(() => {
     startBackgroundAnimations();
@@ -34,25 +35,27 @@ const Credentials = () => {
       alert('Please fill in all fields');
       return;
     }
-  
+
     try {
       const userData = {
         name: name,
         email: email,
         password: password,
         rePassword: rePassword,
+        phoneNumber: phoneNumber,
       };
-  
+
       const documentRef = doc(db, 'customers', 'details');
       await updateDoc(documentRef, {
         RegisteredUser: arrayUnion(userData),
       });
-  
+
       setName('');
       setEmail('');
       setPassword('');
       setRePassword('');
-      
+      setPhoneNumber('');
+
       alert('Sign up successful!');
     } catch (error) {
       console.error('Error adding document: ', error);
@@ -61,7 +64,6 @@ const Credentials = () => {
   };
 
   return (
-    
     <ScrollView contentContainerStyle={styles.container}>
       <Animatable.View
         ref={ref => (this.bgContainerRef = ref)}
@@ -75,7 +77,9 @@ const Credentials = () => {
       </Animatable.View>
 
       <View style={styles.inputContainer}>
-        <Text style={[styles.label, styles.enterDetails]}>PERSONAL INFORMATION</Text>
+        <Text style={[styles.label, styles.enterDetails]}>
+          PERSONAL INFORMATION
+        </Text>
 
         <Text style={styles.label}>Name</Text>
         <TextInput
@@ -84,7 +88,14 @@ const Credentials = () => {
           placeholderTextColor="#888"
           onChangeText={text => setName(text)}
         />
-
+        <Text style={styles.label}>Phone Number</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your phone number"
+          placeholderTextColor="#888"
+          onChangeText={text => setPhoneNumber(text)}
+          keyboardType="phone-pad"
+        />
         <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
@@ -112,10 +123,9 @@ const Credentials = () => {
           secureTextEntry
         />
         <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
-      
     </ScrollView>
   );
 };

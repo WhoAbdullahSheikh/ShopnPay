@@ -1,47 +1,27 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  Dimensions,
-} from 'react-native';
-import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
-import {Avatar} from 'react-native-elements';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { Avatar } from 'react-native-elements';
+import jsonImage from '../../pics/avatar.gif';
 
-const Sidebar = ({navigation}) => {
-  const windowWidth = Dimensions.get('window').width;
-  const animatedValue = new Animated.Value(0);
-
-  const [translateX] = React.useState(new Animated.Value(-windowWidth));
-
-  React.useEffect(() => {
-    Animated.timing(translateX, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-
+const Sidebar = ({ navigation }) => {
   const handleSignOut = () => {
-    // Implement signout functionality
+    
   };
 
   return (
-    <Animated.View style={[styles.container, {transform: [{translateX}]}]}>
+    <View style={styles.container}>
       <DrawerContentScrollView>
         {/* User Info Section */}
         <View style={styles.userInfoSection}>
           <Avatar
             rounded
-            source={{
-              uri: 'https://randomuser.me/api/portraits/men/99.jpg',
-            }}
+            source={jsonImage}
+            style={styles.profileImage}
             size="large"
             containerStyle={styles.avatar}
           />
-          <Text style={styles.username}>John Doe</Text>
+          <Text style={styles.username}>Abdullah Sheikh</Text>
         </View>
         {/* Menu Items Section */}
         <View style={styles.menuItems}>
@@ -64,7 +44,7 @@ const Sidebar = ({navigation}) => {
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
       </DrawerContentScrollView>
-    </Animated.View>
+    </View>
   );
 };
 
@@ -72,10 +52,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
     width: '80%', // Adjust the width of the sidebar as needed
   },
   userInfoSection: {
@@ -104,6 +80,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 100,
+    borderColor: '#A52A2A',
+    borderWidth: 3,
   },
 });
 

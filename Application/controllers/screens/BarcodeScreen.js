@@ -40,6 +40,7 @@ const BarcodeScanner = ({ navigation }) => {
     navigation.navigate('Cart', { scannedBarcode });
     setIsConfirmationModalVisible(false);
     setScannedBarcode(null);
+    setIsCameraOpen(false); // Close the camera after adding to cart
   };
 
   const handleCancelScan = () => {
@@ -70,7 +71,7 @@ const BarcodeScanner = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      {isCameraOpen && (
+      {isCameraOpen && !isConfirmationModalVisible && (
         <RNCamera
           ref={cameraRef}
           style={styles.camera}
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
   },
   camera: {
     width: '95%',
-    aspectRatio: 16 / 11,
+    aspectRatio: 16 / 19,
     borderRadius: 20,
     overflow: 'hidden',
   },

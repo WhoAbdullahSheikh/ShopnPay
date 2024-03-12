@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {Image, View, StatusBar, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -44,7 +43,6 @@ const ShopNPayLogo = () => (
   />
 );
 
-
 /*const HeaderWithImage = () => (
   <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 0,}}>
     <ShopNPayLogo />
@@ -55,22 +53,20 @@ const ShopNPayLogo = () => (
 const StackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Splash"
+      initialRouteName="MainScreen"
       screenOptions={{
         headerShown: false,
         headerStyle: {
           backgroundColor: greyTheme.backgroundColor,
-          
         },
         headerTintColor: greyTheme.textColor,
       }}>
-
       <Stack.Screen
-       name="Splash" 
-       component={SplashScreen} 
-       options={{
-        headerLeft: () => null,
-       }}
+        name="Splash"
+        component={SplashScreen}
+        options={{
+          headerLeft: () => null,
+        }}
       />
       <Stack.Screen
         name="Launch"
@@ -99,7 +95,7 @@ const StackScreen = () => {
         component={MainAppScreen}
         options={{
           headerLeft: () => null,
-        
+
           gestureEnabled: false,
         }}
       />
@@ -121,8 +117,6 @@ const StackScreen = () => {
         name="barcode"
         component={BarcodeScan}
         options={{
-          
-          
           headerLeft: () => null,
         }}
       />
@@ -140,7 +134,7 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
-     
+
       <Stack.Screen
         name="Sidebar"
         component={Sidebar}
@@ -155,7 +149,6 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
-
     </Stack.Navigator>
   );
 };
@@ -169,7 +162,6 @@ export default function App() {
           backgroundColor="transparent"
           translucent={true}
         />
-
 
         <StackScreen />
       </NavigationContainer>

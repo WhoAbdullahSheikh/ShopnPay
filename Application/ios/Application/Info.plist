@@ -53,7 +53,8 @@
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need access to the microphone for recording audio.</string>
-	
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(App_Name) requires FaceID access to allow you quick and secure access.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow app to access device photo library</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
