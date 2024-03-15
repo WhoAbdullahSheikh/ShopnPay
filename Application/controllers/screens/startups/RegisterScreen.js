@@ -25,6 +25,11 @@ const RegisterPage = ({navigation}) => {
   const [verificationText, setVerificationText] = useState('');
   const [incorrectCode, setIncorrectCode] = useState(false);
 
+  const resendOTP = () => {
+    setCode('');
+  
+  };
+
   function onAuthStateChanged(user) {
     if (user) {
     }
@@ -35,11 +40,11 @@ const RegisterPage = ({navigation}) => {
     setVerificationText(
       `We are automatically detecting a SMS sent to your mobile number ${phoneNumberWithAsterisks}`,
     );
-  }, [contact]); // Empty dependency array ensures the effect runs only once, on mount
+  }, [contact]);
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    return subscriber;
   }, []);
 
   const handleContactChange = inputText => {
@@ -56,12 +61,16 @@ const RegisterPage = ({navigation}) => {
       return;
     }
 
+    if (contact.trim().length < 10) {
+      Alert.alert('Invalid phone number', 'Please enter a valid phone number');
+      return;
+    }
+
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
     setConfirm(confirmation);
-    // Add user data to Firestore
+
     const userData = {
       phoneNumber: phoneNumber,
-      
     };
 
     try {
@@ -72,8 +81,6 @@ const RegisterPage = ({navigation}) => {
       console.log('User data added to Firestore');
       console.log('Register success');
       setContact('');
-
-      // Navigate to the Credentials screen only if the user has successfully registered the phone number
     } catch (error) {
       console.error('Error adding user data:', error);
     }
@@ -150,12 +157,14 @@ const RegisterPage = ({navigation}) => {
         maxLength={6}
       />
       {incorrectCode && (
-        <Text style={styles.incorrectCodeMessage}>Incorrect code. Please try again.</Text>
+        <Text style={styles.incorrectCodeMessage}>
+          Incorrect code. Please try again.
+        </Text>
       )}
 
       <Text style={styles.link}>
-        Don't recieve the OTP?
-        <TouchableOpacity>
+        Don't receive the OTP?
+        <TouchableOpacity onPress={resendOTP}>
           <Text style={styles.resendotp}> RESEND OTP</Text>
         </TouchableOpacity>
       </Text>
