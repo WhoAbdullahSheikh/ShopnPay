@@ -1,109 +1,83 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 
-const PromotionsScreen = () => {
-  const [promotions, setPromotions] = useState([]);
+const PromotionScreen = () => {
+  // Sample promotion offers data
+  const promotionOffers = [
+    {
+      id: 1,
+      title: '50% Off on Electronics',
+      description: 'Get 50% off on all electronic items. Limited time offer!',
+      image: require('./../../pics/alfateh.png'),
+    },
+    {
+      id: 2,
+      title: 'Free Shipping on Orders Above $50',
+      description: 'Enjoy free shipping on all orders above $50. Hurry up!',
+      image: require('./../../pics/alfateh.png'),
+    },
+    {
+      id: 3,
+      title: 'Buy One Get One Free on Apparel',
+      description: 'Buy one apparel item and get another one for free. Limited stock!',
+      image: require('./../../pics/alfateh.png'),
+    },
+  ];
 
-  // Example: Fetch promotions data from API
-  useEffect(() => {
-    fetchPromotions();
-  }, []);
-
-  const fetchPromotions = () => {
-    // Fetch promotions data from your API
-    // Update state with fetched promotions
-    const fetchedPromotions = [
-      {
-        id: 1,
-        title: 'Special Offer 1',
-        image: require('./../../pics/alfateh.png'),
-      },
-      {
-        id: 2,
-        title: 'Special Offer 2',
-        image: require('./../../pics/alfateh.png'),
-      },
-      // Add more promotions data as needed
-    ];
-    setPromotions(fetchedPromotions);
-  };
-
-  // Render each promotion item
-  const renderPromotionItem = ({item}) => (
-    <TouchableOpacity
-      style={styles.promotionItem}
-      onPress={() => handlePromotionPress(item)}>
-      <Image source={item.image} style={styles.promotionImage} />
-      <View style={styles.overlay}>
-        <Text style={styles.promotionTitle}>{item.title}</Text>
+  // Render each promotion offer as a card
+  const renderPromotionOffer = (offer) => (
+    <TouchableOpacity key={offer.id} style={styles.card}>
+      <Image source={offer.image} style={styles.image} />
+      <View style={styles.details}>
+        <Text style={styles.title}>{offer.title}</Text>
+        <Text style={styles.description}>{offer.description}</Text>
       </View>
     </TouchableOpacity>
   );
 
-  const handlePromotionPress = item => {
-    // Handle navigation or other actions when a promotion is pressed
-    console.log(`Pressed promotion: ${item.title}`);
-  };
-
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={promotions}
-        keyExtractor={item => item.id.toString()}
-        renderItem={renderPromotionItem}
-        contentContainerStyle={styles.promotionList}
-      />
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      {promotionOffers.map((offer) => renderPromotionOffer(offer))}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flexGrow: 1,
+    backgroundColor: '#F5F5F5',
+    paddingVertical: 20,
     paddingHorizontal: 10,
-    paddingTop: 20,
   },
-  promotionList: {
-    paddingBottom: 20,
-  },
-  promotionItem: {
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 10,
     marginBottom: 20,
-    borderRadius: 15,
-    overflow: 'hidden',
-    position: 'relative',
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: 'black', // Choose the color of the outline
   },
-  promotionImage: {
+  image: {
     width: '100%',
     height: 200,
-    borderRadius: 15,
-    marginBottom: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    resizeMode: 'contain',
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 15,
+  details: {
+    padding: 15,
   },
-  promotionTitle: {
+  title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
-    paddingHorizontal: 20,
-    textAlign: 'center',
+    marginBottom: 10,
+    color: '#333', // Dark color for the title
+  },
+  description: {
+    fontSize: 16,
+    color: '#555', // Light dark color for the description
   },
 });
 
-export default PromotionsScreen;
+
+export default PromotionScreen;

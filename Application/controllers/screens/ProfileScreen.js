@@ -75,6 +75,13 @@ const ProfileScreen = () => {
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.optionButton}>
+            <Icon name="log-out" size={18} color="white" />
+            <Text style={styles.optionText}>Sign out</Text>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Icon name="arrow-forward-circle" size={24} color="white" />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>

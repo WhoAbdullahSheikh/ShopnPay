@@ -1,4 +1,3 @@
-//Imports
 import React, { useState } from 'react';
 import {
   View,
@@ -10,55 +9,67 @@ import {
   Text,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Sidebar from './Sidebar';
-import DrawerScreen from './Sidebar';
+import { useNavigation } from '@react-navigation/native';
+import 'react-native-gesture-handler';
 
-////////////////////////////////////////////////////////////////
-
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const navigation = useNavigation();
 
-  // Define your shopping marts data
   const shoppingMarts = [
-    { id: 1, name: 'Imtiaz', location: 'Imtiaz Super Market', image: require('../../pics/imtiaz.png') },
-    { id: 2, name: 'Al-Fatah', location: 'Al-Fatah Store', image: require('../../pics/alfateh.png') },
-    { id: 3, name: 'SaveMart', location: 'The Real Store', image: require('../../pics/savemart.png') },
-    { id: 4, name: 'PCC', location: 'Punjab Cash & Carry', image: require('../../pics/pcc.png') },
+    {
+      id: 1,
+      name: 'Imtiaz',
+      location: 'Imtiaz Super Market',
+      image: require('../../pics/imtiaz.png'),
+    },
+    {
+      id: 2,
+      name: 'Al-Fatah',
+      location: 'Al-Fatah Store',
+      image: require('../../pics/alfateh.png'),
+    },
+    {
+      id: 3,
+      name: 'SaveMart',
+      location: 'The Real Store',
+      image: require('../../pics/savemart.png'),
+    },
+    {
+      id: 4,
+      name: 'PCC',
+      location: 'Punjab Cash & Carry',
+      image: require('../../pics/pcc.png'),
+    },
   ];
 
-  // Render each shopping mart item as a card
   const renderShoppingMartItem = ({ item }) => (
-    <TouchableOpacity style={styles.card} onPress={() => handleMartPress(item)}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => handleMartPress(item)}>
       <Image source={item.image} style={styles.martImage} />
       <Text style={styles.martName}>{item.name}</Text>
       <Text style={styles.martLocation}>{item.location}</Text>
     </TouchableOpacity>
   );
 
-  // Handle press on a shopping mart card
   const handleMartPress = (mart) => {
-    // Navigate to details screen or perform any other action
     console.log(`Navigating to details of ${mart.name}`);
   };
 
-  // Filter shopping marts based on search query
-  const filteredMarts = shoppingMarts.filter(mart =>
+  const filteredMarts = shoppingMarts.filter((mart) =>
     mart.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Parent container for drawer icon and search bar */}
       <View style={styles.headerContainer}>
-        {/* Drawer Icon */}
         <TouchableOpacity
           style={styles.drawerIconContainer}
-          onPress={() => navigation.navigate('Sidebar')} // Navigate to Sidebar
-        >
+          >
           <Icon name="bars" size={25} color="white" />
         </TouchableOpacity>
 
-        {/* Search Bar */}
         <TextInput
           style={styles.searchBar}
           placeholder="Search Marts"
@@ -67,7 +78,6 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* FlatList and other components */}
       <FlatList
         data={filteredMarts}
         keyExtractor={(item) => item.id.toString()}
@@ -90,7 +100,6 @@ const styles = StyleSheet.create({
   },
   drawerIconContainer: {
     marginRight: 10,
-    
   },
   searchBar: {
     flex: 1,
