@@ -27,7 +27,6 @@ const RegisterPage = ({navigation}) => {
 
   const resendOTP = () => {
     setCode('');
-  
   };
 
   function onAuthStateChanged(user) {
@@ -123,9 +122,9 @@ const RegisterPage = ({navigation}) => {
           </TouchableOpacity>
           <Text style={styles.link}>
             Already have an account?{' '}
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}></TouchableOpacity>
-            <Text style={styles.loginText}> Log In</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.loginText}> Log In</Text>
+            </TouchableOpacity>
           </Text>
         </View>
       </ScrollView>
@@ -185,6 +184,8 @@ const RegisterPage = ({navigation}) => {
       </TouchableOpacity>
     </View>
   );
+
+  
 };
 
 const styles = StyleSheet.create({

@@ -43,9 +43,9 @@ const LoginPage = ({navigation}) => {
 
       <Text style={styles.link}>
         Don't have an account?{' '}
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Register')}></TouchableOpacity>
-        <Text style={styles.registerText}> Register</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.registerText}> Register</Text>
+        </TouchableOpacity>
       </Text>
     </View>
   );
