@@ -41,7 +41,7 @@ const SplashScreen = ({ navigation }) => {
       colors={['#FFFFFF', '#FFFFFF']} // Replace with your desired gradient colors
       style={styles.container}>
       <Animated.Image
-        source={require('./../../../pics/mainlogo.png')} 
+        source={require('../../../pics/mainlogo.png')} 
         style={{
           ...styles.artwork,
           opacity: fadeAnim,

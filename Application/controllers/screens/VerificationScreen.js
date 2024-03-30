@@ -8,7 +8,7 @@ const VerificationScreen = ({navigation}) => {
     <View style={styles.container}>
       <LottieView
         style={styles.animation}
-        source={require('./../../pics/animations/verified-3.json')}
+        source={require('../../pics/animations/verified-3.json')}
         autoPlay
         loop
       />

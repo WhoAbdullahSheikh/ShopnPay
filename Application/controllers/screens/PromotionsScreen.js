@@ -8,19 +8,19 @@ const PromotionScreen = () => {
       id: 1,
       title: '50% Off on Electronics',
       description: 'Get 50% off on all electronic items. Limited time offer!',
-      image: require('./../../pics/alfateh.png'),
+      image: require('../../pics/alfateh.png'),
     },
     {
       id: 2,
       title: 'Free Shipping on Orders Above $50',
       description: 'Enjoy free shipping on all orders above $50. Hurry up!',
-      image: require('./../../pics/alfateh.png'),
+      image: require('../../pics/alfateh.png'),
     },
     {
       id: 3,
       title: 'Buy One Get One Free on Apparel',
       description: 'Buy one apparel item and get another one for free. Limited stock!',
-      image: require('./../../pics/alfateh.png'),
+      image: require('../../pics/alfateh.png'),
     },
   ];
 

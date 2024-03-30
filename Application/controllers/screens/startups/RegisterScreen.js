@@ -14,7 +14,7 @@ import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
 import {db} from '../../components/config';
 import auth from '@react-native-firebase/auth';
 import LottieView from 'lottie-react-native';
-import database from '@react-native-firebase/database';
+
 
 const RegisterPage = ({navigation}) => {
   const [contact, setContact] = useState('');

@@ -14,7 +14,7 @@ const Launch = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('./../../../pics/shopping.gif')} style={styles.logo} />
+      <Image source={require('../../../pics/shopping.gif')} style={styles.logo} />
       <ActivityIndicator size="large" color="#0000ff" />
     </View>
   );

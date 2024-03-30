@@ -38,7 +38,7 @@ const HeaderWithImage = () => {
 
 const ShopNPayLogo = () => (
   <Image
-    source={require('./../../pics/mainlogo-white.png')}
+    source={require('../../pics/mainlogo-white.png')}
     style={{
       width: 150,
       height: 60,
