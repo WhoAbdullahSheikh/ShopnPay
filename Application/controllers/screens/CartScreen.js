@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native';
-import Colors from "../../src/utilities/Color"
+import Colors from "../../src/Color"
 import Receipt from './Receipt';
 
 const Cart = ({ route }) => {
