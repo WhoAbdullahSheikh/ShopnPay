@@ -10,11 +10,10 @@ import {
   Alert,
   ImageBackground,
 } from 'react-native';
-import {doc, updateDoc, arrayUnion} from 'firebase/firestore';
+import {doc, updateDoc, arrayUnion, setDoc} from 'firebase/firestore';
 import {db} from '../../components/config';
 import auth from '@react-native-firebase/auth';
 import LottieView from 'lottie-react-native';
-
 
 const RegisterPage = ({navigation}) => {
   const [contact, setContact] = useState('');
@@ -24,6 +23,10 @@ const RegisterPage = ({navigation}) => {
   const [code, setCode] = useState('');
   const [verificationText, setVerificationText] = useState('');
   const [incorrectCode, setIncorrectCode] = useState(false);
+  const [showPasswordFields, setShowPasswordFields] = useState(false);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [focusedInput, setFocusedInput] = useState(null);
 
   const resendOTP = () => {
     setCode('');
@@ -50,13 +53,14 @@ const RegisterPage = ({navigation}) => {
     const numericInput = inputText.replace(/[^0-9]/g, '');
     if (/^\d{0,10}$/.test(numericInput)) {
       setContact(numericInput);
+      setShowPasswordFields(numericInput.length === 10);
     }
   };
 
   async function signInWithPhoneNumber() {
     const phoneNumber = countryCode + contact;
-    if (!contact.trim()) {
-      Alert.alert('Please enter a phone number.');
+    if (!contact.trim() || !password.trim()) {
+      Alert.alert('Please enter all required fields.');
       return;
     }
 
@@ -67,30 +71,41 @@ const RegisterPage = ({navigation}) => {
 
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
     setConfirm(confirmation);
-
-    const userData = {
-      phoneNumber: phoneNumber,
-    };
-
-    try {
-      const documentRef = doc(db, 'customers', 'details');
-      await updateDoc(doc(db, 'customers', 'details'), {
-        RegisteredUser: arrayUnion(userData),
-      });
-      console.log('User data added to Firestore');
-      console.log('Register success');
-      setContact('');
-    } catch (error) {
-      console.error('Error adding user data:', error);
-    }
   }
   async function confirmCode() {
     try {
-      await confirm.confirm(code);
-      console.log('Correct.');
-      navigation.navigate('Verification');
+      let response = await confirm.confirm(code);
+      if (response) {
+        console.log('OTP verification successful.');
+
+        const fullPhoneNumber = `${countryCode}${contact}`;
+        const userData = {
+          phoneNumber: fullPhoneNumber,
+          password: password,
+        };
+
+        try {
+          const documentRef = doc(db, 'customers', 'details');
+          await setDoc(
+            documentRef,
+            {
+              ...userData,
+            },
+            {merge: true},
+          );
+
+          console.log('User data added to Firestore');
+          setContact('');
+          setPassword('');
+          setConfirmPassword('');
+        } catch (error) {
+          console.error('Error saving user data:', error);
+        }
+
+        navigation.navigate('Verification');
+      }
     } catch (error) {
-      console.log('Invalid code.');
+      console.log('Invalid OTP code.');
       setIncorrectCode(true);
     }
   }
@@ -109,11 +124,33 @@ const RegisterPage = ({navigation}) => {
               onChangeText={handleContactChange}
               placeholder="Enter number"
               placeholderTextColor="#888"
-              style={styles.input}
+              style={[
+                styles.input,
+                focusedInput === 'contact' ? styles.focusedInput : null,
+              ]}
               keyboardType="phone-pad"
               maxLength={10}
+              onFocus={() => setFocusedInput('contact')}
+              onBlur={() => setFocusedInput(null)}
             />
           </View>
+          {showPasswordFields && (
+            <>
+              <TextInput
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Enter password"
+                secureTextEntry={true}
+                placeholderTextColor="#888"
+                style={[
+                  styles.pass_input,
+                  focusedInput === 'password' ? styles.focusedInput : null,
+                ]}
+                onFocus={() => setFocusedInput('password')}
+                onBlur={() => setFocusedInput(null)}
+              />
+            </>
+          )}
 
           <TouchableOpacity
             style={styles.button}
@@ -184,8 +221,6 @@ const RegisterPage = ({navigation}) => {
       </TouchableOpacity>
     </View>
   );
-
-  
 };
 
 const styles = StyleSheet.create({
@@ -291,6 +326,26 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 10,
     fontSize: 15,
+  },
+  pass_input: {
+    borderWidth: 1,
+    borderColor: 'black',
+    width: 300,
+    marginBottom: 10,
+    padding: 10,
+    height: 45,
+    borderRadius: 10,
+    fontSize: 15,
+  },
+  focusedInput: {
+    borderColor: '#A52A2A', // A deep red color for the border
+    borderWidth: 2,
+    backgroundColor: '#fff', // Optional: can adjust the background color for contrast
+    shadowColor: '#A52A2A', // Use the same color as the border for the glow effect
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 0.6, // Adjust opacity for more or less glow
+    shadowRadius: 10, // Spread of the glow
+    elevation: 15, // Android shadow
   },
   button: {
     width: 300,
