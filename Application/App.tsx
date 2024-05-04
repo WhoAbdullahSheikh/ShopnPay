@@ -53,7 +53,7 @@ const ShopNPayLogo = () => (
 const StackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="MainScreen"
+      initialRouteName="Register"
       screenOptions={{
         headerShown: false,
         headerStyle: {
