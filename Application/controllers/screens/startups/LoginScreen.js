@@ -59,7 +59,7 @@ const LoginPage = ({navigation}) => {
     const users = docSnapshot.data().RegisteredUser;
     const userFound = users.find(user => user.phoneNumber === phoneNumber && user.password === password);
   
-    return !!userFound; // returns true if user is found, false otherwise
+    return !!userFound;
   };
   
 
@@ -70,7 +70,7 @@ const LoginPage = ({navigation}) => {
     const userExists = await checkUserExists(phoneNumber, password);
     if (userExists) {
       Alert.alert('Login Successful', 'You are logged in successfully');
-      navigation.navigate('MainScreen'); // Adjust according to your navigation needs
+      navigation.navigate('MainScreen');
     } else {
       Alert.alert('Login Failed', 'Invalid phone number or password.');
      

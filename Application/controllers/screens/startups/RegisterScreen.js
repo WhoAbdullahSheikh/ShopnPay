@@ -82,13 +82,13 @@ const RegisterPage = ({navigation}) => {
       user => user.phoneNumber === phoneNumber,
     );
 
-    return !!userFound; // returns true if user is found, false otherwise
+    return !!userFound;
   };
 
   async function signInWithPhoneNumber() {
     const phoneNumber = `${countryCode}${contact}`;
     if (!contact.trim() || !password.trim()) {
-      Alert.alert('Please Enter all required fields.');
+      Alert.alert('Register Failed','Please Enter all required fields.');
       return;
     }
 
@@ -139,7 +139,7 @@ const RegisterPage = ({navigation}) => {
           setPassword('');
           setConfirmPassword('');
         } catch (error) {
-          console.error('Error saving user data:', error);
+          Alert.alert('Error','Error saving user data');
         }
 
         navigation.navigate('Verification');
