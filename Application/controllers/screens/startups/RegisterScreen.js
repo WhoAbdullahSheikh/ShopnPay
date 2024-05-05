@@ -10,7 +10,18 @@ import {
   Alert,
   ImageBackground,
 } from 'react-native';
-import {doc, updateDoc, arrayUnion, setDoc} from 'firebase/firestore';
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  arrayUnion,
+  setDoc,
+  getDocs,
+  query,
+  collection,
+  where,
+} from 'firebase/firestore';
+
 import {db} from '../../components/config';
 import auth from '@react-native-firebase/auth';
 import LottieView from 'lottie-react-native';
@@ -57,10 +68,27 @@ const RegisterPage = ({navigation}) => {
     }
   };
 
+  const checkUserExists = async (phoneNumber, password) => {
+    const detailsRef = doc(db, 'customers', 'details');
+    const docSnapshot = await getDoc(detailsRef);
+
+    if (!docSnapshot.exists()) {
+      console.log('No details document found.');
+      return false;
+    }
+
+    const users = docSnapshot.data().RegisteredUser;
+    const userFound = users.find(
+      user => user.phoneNumber === phoneNumber,
+    );
+
+    return !!userFound; // returns true if user is found, false otherwise
+  };
+
   async function signInWithPhoneNumber() {
-    const phoneNumber = countryCode + contact;
+    const phoneNumber = `${countryCode}${contact}`;
     if (!contact.trim() || !password.trim()) {
-      Alert.alert('Please enter all required fields.');
+      Alert.alert('Please Enter all required fields.');
       return;
     }
 
@@ -68,10 +96,26 @@ const RegisterPage = ({navigation}) => {
       Alert.alert('Invalid phone number', 'Please enter a valid phone number');
       return;
     }
+    const userExists = await checkUserExists(phoneNumber, password);
+    if (userExists) {
+      Alert.alert(
+        'Registration Error',
+        'This phone number is already registered.',
+      );
+      return;
+    } 
 
-    const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-    setConfirm(confirmation);
+    try {
+      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+      setConfirm(confirmation);
+    } catch (error) {
+      Alert.alert(
+        'Failed to send OTP',
+        'There was a problem sending the verification code.',
+      );
+    }
   }
+
   async function confirmCode() {
     try {
       let response = await confirm.confirm(code);
@@ -86,13 +130,9 @@ const RegisterPage = ({navigation}) => {
 
         try {
           const documentRef = doc(db, 'customers', 'details');
-          await setDoc(
-            documentRef,
-            {
-              ...userData,
-            },
-            {merge: true},
-          );
+          await updateDoc(doc(db, 'customers', 'details'), {
+            RegisteredUser: arrayUnion(userData),
+          });
 
           console.log('User data added to Firestore');
           setContact('');
@@ -154,9 +194,10 @@ const RegisterPage = ({navigation}) => {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => signInWithPhoneNumber()}>
+            onPress={signInWithPhoneNumber}>
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
+
           <Text style={styles.link}>
             Already have an account?{' '}
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
