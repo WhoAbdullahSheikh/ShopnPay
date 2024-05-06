@@ -10,7 +10,7 @@ if (!isset($_SESSION['email'])) {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "wonderland";
+$dbname = "Shopnpay";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

@@ -4,14 +4,14 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Check if the user is logged in and is an admin.
-if (!isset($_SESSION['email']) || $_SESSION['email'] !== 'admin@wonderland.com') {
+if (!isset($_SESSION['email']) || $_SESSION['email'] !== 'admin@shopnpay.com') {
   header('Location: loginscreen.php'); // Redirect to login page if not admin
   exit();
 }
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "wonderland";
+$dbname = "Shopnpay";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -88,7 +88,7 @@ $conn->close();
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wonderland</title>
+  <title>Shopnpay</title>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="./ecommerce.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -883,6 +883,10 @@ $conn->close();
         <i class="material-icons">favorite</i>
         <span>Items Listings</span>
       </a>
+      <a href="#" id="addedProductsButton" onclick="toggleSections('addedItems')">
+        <i class="material-icons">favorite</i>
+        <span>Add Product</span>
+      </a>
 
 
       <hr>
@@ -893,7 +897,7 @@ $conn->close();
     </div>
 
     <div class="logo">
-      <a href="../home.php">Wonderland</a>
+      <a href="../home.php">Shopnpay</a>
     </div>
 
     <div class="heading">
@@ -1027,9 +1031,13 @@ $conn->close();
     </div>
   </div>
 
-  <div id="itemsAdded" style="background-color: white; color: black; padding: 20px; padding-left: 15%;">
+  <div id="itemsAdded" style="background-color: white; color: black; padding: 20px; padding-left: 5%;">
     <div class="profile-container">
-      <h2>Your Added Products</h2>
+      <h2>Your Added Products
+        <button onclick="location.reload();" style="margin-left: 1050px; cursor: pointer;" class="refresh-button">
+          <i class="fa fa-refresh fa-spin"></i>
+        </button>
+      </h2>
       <div class="section-break">
         <hr />
       </div>

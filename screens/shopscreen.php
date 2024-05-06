@@ -3,8 +3,8 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "wonderland";
-if (isset($_SESSION['email']) && $_SESSION['email'] !== 'admin@wonderland.com') {
+$dbname = "Shopnpay";
+if (isset($_SESSION['email']) && $_SESSION['email'] !== 'admin@Shopnpay.com') {
   $showProfileIcon = true;
 } else {
   $showProfileIcon = false;
@@ -28,7 +28,7 @@ $result = $conn->query($sql);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wonderland</title>
+  <title>Shopnpay</title>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" />
@@ -988,7 +988,7 @@ $result = $conn->query($sql);
 <body>
   <header>
     <div class="logo">
-      <a href="#">Wonderland</a>
+      <a href="#">Shopnpay</a>
     </div>
 
     <div class="heading">
@@ -1120,7 +1120,7 @@ $result = $conn->query($sql);
 
   <footer>
     <div class="footer0">
-      <h1>Wonderland</h1>
+      <h1>Shopnpay</h1>
     </div>
     <div class="footer1">
       Connect with us at
@@ -1167,7 +1167,7 @@ $result = $conn->query($sql);
     </div>
     <div class="footer3">
       Copyright ©
-      <h4>Wonderland</h4>
+      <h4>Shopnpay</h4>
       2024
     </div>
   </footer>

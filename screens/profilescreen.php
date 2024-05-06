@@ -10,7 +10,7 @@
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $dbname = "wonderland";
+    $dbname = "Shopnpay";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -56,7 +56,7 @@
 
     if (isset($_GET['id']) && is_numeric($_GET['id'])) {
       $productId = $_GET['id'];
-      $conn = new mysqli("localhost", "root", "", "wonderland");
+      $conn = new mysqli("localhost", "root", "", "Shopnpay");
       if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
       }
@@ -89,7 +89,7 @@
  <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>Wonderland</title>
+   <title>Shopnpay</title>
    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
    <link rel="stylesheet" href="./ecommerce.css" />
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -1059,7 +1059,7 @@
      </div>
 
      <div class="logo">
-       <a href="../home.php">Wonderland</a>
+       <a href="../home.php">Shopnpay</a>
      </div>
 
      <div class="heading">

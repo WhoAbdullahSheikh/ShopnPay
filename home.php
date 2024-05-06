@@ -1,6 +1,6 @@
 <?php
 session_start(); // Start the session to access session variables
-if (isset($_SESSION['email']) && $_SESSION['email'] === 'admin@wonderland.com') {
+if (isset($_SESSION['email']) && $_SESSION['email'] === 'admin@Shopnpay.com') {
   $showProfileIcon = true;
 } else {
   $showProfileIcon = false;
@@ -15,7 +15,7 @@ if (isset($_SESSION['email']) && $_SESSION['email'] === 'admin@wonderland.com') 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wonderland</title>
+  <title>Shopnpay</title>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="./home.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -25,7 +25,7 @@ if (isset($_SESSION['email']) && $_SESSION['email'] === 'admin@wonderland.com') 
 
 <body>
   <header>
-    <div class="logo"><a href="#">Wonderland</a></div>
+    <div class="logo"><a href="#">Shopnpay</a></div>
 
     <div class="heading">
       <ul>
@@ -43,7 +43,7 @@ if (isset($_SESSION['email']) && $_SESSION['email'] === 'admin@wonderland.com') 
           </li>
         <?php endif; ?>
         
-        <?php if (isset($_SESSION['email']) && $_SESSION['email'] !== 'admin@wonderland.com') : ?>
+        <?php if (isset($_SESSION['email']) && $_SESSION['email'] !== 'admin@Shopnpay.com') : ?>
           <li>
             <a href="./screens/profilescreen.php"><i class="fa fa-user" style="font-size: 20px; color: white"></i></a>
           </li>
@@ -135,7 +135,7 @@ if (isset($_SESSION['email']) && $_SESSION['email'] === 'admin@wonderland.com') 
   </section>
   <footer>
     <div class="footer0">
-      <h1>Wonderland</h1>
+      <h1>Shopnpay</h1>
     </div>
     <div class="footer1">
       Connect with us at
@@ -182,7 +182,7 @@ if (isset($_SESSION['email']) && $_SESSION['email'] === 'admin@wonderland.com') 
     </div>
     <div class="footer3">
       Copyright ©
-      <h4>Wonderland</h4>
+      <h4>Shopnpay</h4>
       2024
     </div>
   </footer>

@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `wonderland`
+-- Database: `Shopnpay`
 --
 
 -- --------------------------------------------------------
@@ -37,7 +37,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`email`, `password`) VALUES
-('admin@wonderland.com', 'root');
+('admin@Shopnpay.com', 'root');
 
 -- --------------------------------------------------------
 
