@@ -3,9 +3,8 @@ session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Check if the user is logged in and is an admin.
 if (!isset($_SESSION['email']) || $_SESSION['email'] !== 'admin@shopnpay.com') {
-  header('Location: loginscreen.php'); // Redirect to login page if not admin
+  header('Location: loginscreen.php');
   exit();
 }
 $servername = "localhost";
@@ -15,21 +14,20 @@ $dbname = "Shopnpay";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
 $sqlApproved = "SELECT COUNT(*) AS count_approved FROM products WHERE status = 'approved'";
 $resultApproved = $conn->query($sqlApproved);
-$approvedCount = $resultApproved->fetch_assoc()['count_approved'];  // Get the count
+$approvedCount = $resultApproved->fetch_assoc()['count_approved'];
 
 
 $sqlRejected = "SELECT COUNT(*) AS count_rejected FROM products WHERE status = 'rejected'";
 $resultRejected = $conn->query($sqlRejected);
-$rejectedCount = $resultRejected->fetch_assoc()['count_rejected'];  // Get the count
+$rejectedCount = $resultRejected->fetch_assoc()['count_rejected'];
 
-$sql = "SELECT filename, id, p_name, description, price, category, status FROM products WHERE status = 'Approved' OR status = 'Rejected' ORDER BY id ASC"; // Modify query as needed
+$sql = "SELECT filename, id, p_name, description, price, category, status FROM products WHERE status = 'Approved' OR status = 'Rejected' ORDER BY id ASC";
 $result = $conn->query($sql);
 
 if ($result === false) {
@@ -48,7 +46,6 @@ WHERE products.status = 'pending'";
 
 $result = $conn->query($sql);
 
-// Check if "approve" or "reject" actions have been triggered
 if (isset($_GET['action'], $_GET['id']) && in_array($_GET['action'], ['approve', 'reject'])) {
   $newStatus = $_GET['action'] === 'approve' ? 'approved' : 'rejected';
   $stmt = $conn->prepare("UPDATE products SET status = ? WHERE id = ?");
@@ -56,14 +53,12 @@ if (isset($_GET['action'], $_GET['id']) && in_array($_GET['action'], ['approve',
   $stmt->execute();
   $stmt->close();
 
-  // Redirect to prevent resubmission
   header('Location: admin.php');
   exit();
 }
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
   $productId = $_GET['id'];
 
-  // SQL to delete the product
   $sql = "DELETE FROM products WHERE id = ?";
   $stmt = $conn->prepare($sql);
   $stmt->bind_param('i', $productId);
@@ -78,7 +73,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
   $stmt->close();
   $conn->close();
 }
-// Close database connection if open
 $conn->close();
 ?>
 
@@ -120,7 +114,7 @@ $conn->close();
       align-items: center;
       height: 60px;
       width: 100%;
-      background: black;
+      background: #A52A2A;
     }
 
 
@@ -132,7 +126,7 @@ $conn->close();
       align-items: center;
       height: 60px;
       width: 100%;
-      background: black;
+      background: #A52A2A;
       padding-right: 3%;
     }
 
@@ -621,7 +615,7 @@ $conn->close();
       z-index: 1;
       top: 60px;
       left: 0;
-      background-color: #111;
+      background-color: #7F1E1E;
       overflow-x: hidden;
       transition: 0.5s;
       padding-top: 60px;
