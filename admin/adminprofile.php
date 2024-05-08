@@ -99,6 +99,9 @@ $conn->close();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+
 
   <style>
     * {
@@ -869,6 +872,31 @@ $conn->close();
     .delete-button:hover {
       color: #d11a2a;
     }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 30%;
+      padding: 10px;
+      border: 1px solid black;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    button[type="submit"] {
+      width: 30%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgb(240, 197, 6);
+      color: rgb(0, 0, 0);
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: rgb(243, 168, 7);
+    }
   </style>
 </head>
 
@@ -1041,10 +1069,27 @@ $conn->close();
       <div class="section-break">
         <hr />
       </div>
+      <!-- Product Form -->
+      <form id="productForm" style="margin-top: 20px;">
+        <div class="input-container">
+          <label for="barcode">Barcode:</label>
+          <input type="text" id="barcode" name="barcode" placeholder="Enter barcode">
+        </div>
 
+        <div class="input-container">
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" placeholder="Enter product description" style="border-radius: 10px; height: 200px; width: 40%; font-size: 15px; padding: 10px"></textarea>
+        </div>
 
+        <div class="input-container">
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" placeholder="Enter price">
+        </div><br><br>
+        <button type="submit" style="cursor: pointer;">Add Product</button>
+      </form>
     </div>
   </div>
+
 
 
   </div>
@@ -1112,6 +1157,47 @@ $conn->close();
       document.getElementById("addedProductsButton").addEventListener("click", function() {
         toggleSections('addedItems');
       });
+    });
+  </script>
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCAneIuC6viFHntMIPWiDVkHwOugqBDnZ4",
+      authDomain: "shopnpay-1f1ee.firebaseapp.com",
+      projectId: "shopnpay-1f1ee",
+      storageBucket: "shopnpay-1f1ee.appspot.com",
+      messagingSenderId: "693942396461",
+      appId: "1:693942396461:web:be7c0184523dcee3583aa4",
+      measurementId: "G-T91V52DWZX"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+  <script>
+    document.getElementById('productForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      const barcode = document.getElementById('barcode').value;
+      const description = document.getElementById('description').value;
+      const price = document.getElementById('price').value;
+
+      // Add a new document in collection "products"
+      db.collection("products").add({
+          barcode: barcode,
+          description: description,
+          price: price
+        })
+        .then(function(docRef) {
+          console.log("Document written with ID: ", docRef.id);
+          alert('Product added successfully!');
+          // Optionally clear the form or redirect the user
+          document.getElementById('productForm').reset();
+        })
+        .catch(function(error) {
+          console.error("Error adding document: ", error);
+          alert('Error adding product!');
+        });
     });
   </script>
 
