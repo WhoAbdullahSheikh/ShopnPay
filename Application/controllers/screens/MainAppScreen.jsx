@@ -1,19 +1,8 @@
-import React, {useState} from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {NavigationContainer} from '@react-navigation/native';
-import {
-  Image,
-  Text,
-  View,
-  Button,
-  FlatList,
-  StyleSheet,
-  Switch,
-  TouchableOpacity,
-} from 'react-native';
+
+import {Image, Text, View, Button, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icons from 'react-native-vector-icons/Ionicons';
 import Cart from './CartScreen';
 import ProfileScreen from './ProfileScreen'; // Replace with the correct path to ProfileScreen.js
 import BarcodeScanner from './BarcodeScreen';
@@ -42,7 +31,7 @@ const ShopNPayLogo = () => (
     style={{
       width: 150,
       height: 60,
-      resizeMode: 'contain',
+      resizeMode: 'contain', 
       marginBottom: 10,
     }}
   />

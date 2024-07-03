@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import jsonImage from '../../pics/avatar.gif';
 import Icons from 'react-native-vector-icons/FontAwesome';
-import AccInfo from './navigations/AccInfo';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -15,12 +14,21 @@ const ProfileScreen = () => {
     navigation.navigate('AccountInformation');
   };
 
+  const signOut = async () => {
+    try {
+      await AsyncStorage.removeItem('userSession');
+      Alert.alert('Signed Out', 'You have been signed out successfully');
+      navigation.replace('Login'); // Navigate to Login screen
+    } catch (error) {
+      console.error('Error signing out', error);
+      Alert.alert('Error', 'There was an error signing out. Please try again.');
+    }
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-        
-        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}></TouchableOpacity>
         <Text style={styles.title}>Account Settings</Text>
         <Text style={styles.heading1}>Account info, Settings & More</Text>
 
@@ -39,46 +47,39 @@ const ProfileScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Settings</Text>
 
-          <TouchableOpacity  onPress={AccountInformation} style={styles.optionButton}>
+          <TouchableOpacity onPress={AccountInformation} style={styles.optionButton}>
             <Icons name="user" size={18} color="white" />
             <Text style={styles.optionText}>Account Information</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
-              
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton}>
+          <TouchableOpacity onPress={() => navigation.navigate('NotificationSettings')} style={styles.optionButton}>
             <Icon name="notifications" size={18} color="white" />
             <Text style={styles.optionText}>Notifications</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton}>
-            <Icon name="language" size={18} color="white" />
-            <Text style={styles.optionText}>Language</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Icon name="arrow-forward-circle" size={24} color="white" />
-            </View>
-          </TouchableOpacity>
+
           <TouchableOpacity style={styles.optionButton}>
             <Icon name="lock-closed" size={18} color="white" />
             <Text style={styles.optionText}>Privacy</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.optionButton}>
             <Icon name="information-circle" size={18} color="white" />
             <Text style={styles.optionText}>About Us</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton}>
+          <TouchableOpacity onPress={signOut} style={styles.optionButton}>
             <Icon name="log-out" size={18} color="white" />
             <Text style={styles.optionText}>Sign out</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <View style={{flex: 1, alignItems: 'flex-end'}}>
               <Icon name="arrow-forward-circle" size={24} color="white" />
             </View>
           </TouchableOpacity>
@@ -98,7 +99,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     fontSize: 25,
     fontFamily: 'Raleway-Bold',
-
   },
   heading1: {
     fontSize: 15,
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   sectionBreakLine: {
     height: 1,
     backgroundColor: '#A52A2A',
-    marginVertical: 10, 
+    marginVertical: 10,
   },
   optionButton: {
     flexDirection: 'row',

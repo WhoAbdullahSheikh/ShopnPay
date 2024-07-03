@@ -1,0 +1,15 @@
+return (
+    <ScrollView contentContainerStyle={{flex: 1}}>
+      {authenticated ? (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text>Your account information</Text>
+          {/* Display your content here */}
+        </View>
+      ) : (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text>Authenticating...</Text>
+        </View>
+      )}
+    </ScrollView>
+  );
+};

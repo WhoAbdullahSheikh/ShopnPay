@@ -3,8 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
+import Cart from './CartScreen';
 
-const BarcodeScanner = ({ navigation }) => {
+const Tab = createBottomTabNavigator();
+
+const BarcodeScannerScreen = ({ navigation }) => {
   const cameraRef = useRef(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [scannedBarcode, setScannedBarcode] = useState(null);
@@ -55,19 +60,13 @@ const BarcodeScanner = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.scanButton}
-          onPress={handleScanButtonPress}>
+        <TouchableOpacity style={styles.scanButton} onPress={handleScanButtonPress}>
           <Text style={styles.buttonText}>Scan Code</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.flashButton} onPress={handleToggleFlash}>
         <Text style={styles.buttonText}>
-          <Icon
-            name={isFlashOn ? 'flash' : 'flash-off'}
-            size={24}
-            color="#A52A2A"
-          />
+          <Icon name={isFlashOn ? 'flash' : 'flash-off'} size={24} color="#A52A2A" />
         </Text>
       </TouchableOpacity>
 
@@ -109,14 +108,10 @@ const BarcodeScanner = ({ navigation }) => {
               <Text style={styles.resultText}>
                 Scanned Barcode: {scannedBarcode}
               </Text>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={handleAddToCart}>
+              <TouchableOpacity style={styles.modalButton} onPress={handleAddToCart}>
                 <Text style={styles.buttonText}>Add to Cart</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalButton}
-                onPress={handleCancelScan}>
+              <TouchableOpacity style={styles.modalButton} onPress={handleCancelScan}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -218,6 +213,66 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     paddingRight: 25,
     borderRadius: 10,
+  },
+});
+
+const BarcodeScanner = () => {
+  const navigation = useNavigation();
+  const greyTheme = {
+    backgroundColor: '#A52A2A',
+    textColor: 'white',
+  };
+
+  return (
+    <View style={styles2.container}>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: styles2.tabBarStyle,
+          tabBarLabelStyle: styles2.tabBarLabel,
+          tabBarActiveTintColor: greyTheme.textColor,
+          tabBarInactiveTintColor: 'lightgrey',
+          headerStyle: {
+            backgroundColor: greyTheme.backgroundColor,
+          },
+          headerTintColor: greyTheme.textColor,
+          headerLeft: () => (
+            route.name === 'Scan' && (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Icon name="arrow-back" size={25} color={greyTheme.textColor} style={{ marginLeft: 15 }} />
+              </TouchableOpacity>
+            )
+          ),
+        })}>
+        <Tab.Screen
+          name="Scan"
+          component={BarcodeScannerScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => <Icon name="barcode" size={size} color={color} />,
+          }}
+        />
+        <Tab.Screen
+          name="Cart"
+          component={Cart}
+          options={{
+            tabBarIcon: ({ color, size }) => <Icon name="cart" size={size} color={color} />,
+          }}
+        />
+      </Tab.Navigator>
+    </View>
+  );
+};
+
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#A52A2A',
+  },
+  tabBarStyle: {
+    backgroundColor: '#A52A2A',
+  },
+  tabBarLabel: {
+    fontSize: 12,
+    fontFamily: 'Raleway-Bold',
   },
 });
 

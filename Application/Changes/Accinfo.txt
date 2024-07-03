@@ -1,0 +1,5 @@
+{authenticated ? (
+         
+        ) : (
+          <Text style={styles.loadingText}>Authenticating...</Text>
+        )}

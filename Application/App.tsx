@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {Image, View, StatusBar, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -9,7 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import ProfileScreen from './controllers/screens/ProfileScreen';
 import MainAppScreen from './controllers/screens/MainAppScreen';
-import BarcodeScan from './controllers/screens/BarcodeScreen';
+import BarcodeScannerScreen from './controllers/screens/BarcodeScreen';
 import RegisterScreen from './controllers/screens/startups/RegisterScreen';
 import LoginScreen from './controllers/screens/startups/LoginScreen';
 import Credentials from './controllers/screens/startups/Credentials';
@@ -19,6 +20,7 @@ import SettingsScreen from './controllers/screens/SettingsScreen';
 import AccInfo from './controllers/screens/navigations/AccInfo';
 import Sidebar from './controllers/screens/Sidebar';
 import VerificationScreen from './controllers/screens/VerificationScreen';
+import NotificationSettings from './controllers/screens/navigations/NotificationSettings';
 ////////////////////////////////////////////////////////////////
 //Declarations
 
@@ -43,14 +45,10 @@ const ShopNPayLogo = () => (
   />
 );
 
-/*const HeaderWithImage = () => (
-  <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 0,}}>
-    <ShopNPayLogo />
-  </View>
-);
-*/
+
 
 const StackScreen = () => {
+  
   return (
     <Stack.Navigator
       initialRouteName="Register"
@@ -115,7 +113,7 @@ const StackScreen = () => {
       />
       <Stack.Screen
         name="barcode"
-        component={BarcodeScan}
+        component={BarcodeScannerScreen}
         options={{
           headerLeft: () => null,
         }}
@@ -134,7 +132,13 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
-
+      <Stack.Screen
+        name="NotificationSettings"
+        component={NotificationSettings}
+        options={{
+          headerLeft: () => null,
+        }}
+      />
       <Stack.Screen
         name="Sidebar"
         component={Sidebar}
@@ -149,6 +153,7 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
+    
     </Stack.Navigator>
   );
 };

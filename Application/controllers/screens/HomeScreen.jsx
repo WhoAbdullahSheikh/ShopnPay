@@ -11,7 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import 'react-native-gesture-handler';
-
+import BarcodeScanner from './BarcodeScreen';
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigation = useNavigation();
@@ -22,41 +22,42 @@ const HomeScreen = () => {
       name: 'Imtiaz',
       location: 'Imtiaz Super Market',
       image: require('../../pics/imtiaz.png'),
+      database: 'imtiaz_database', // Add a database field for each mart
     },
     {
       id: 2,
       name: 'Al-Fatah',
       location: 'Al-Fatah Store',
       image: require('../../pics/alfateh.png'),
+      database: 'alfateh_database', // Add a database field for each mart
     },
     {
       id: 3,
       name: 'SaveMart',
       location: 'The Real Store',
       image: require('../../pics/savemart.png'),
+      database: 'savemart_database', // Add a database field for each mart
     },
     {
       id: 4,
       name: 'PCC',
       location: 'Punjab Cash & Carry',
       image: require('../../pics/pcc.png'),
+      database: 'pcc_database', // Add a database field for each mart
     },
   ];
 
   const renderShoppingMartItem = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => handleMartPress(item)}>
+      onPress={() => navigation.navigate('barcode')}>
       <Image source={item.image} style={styles.martImage} />
       <Text style={styles.martName}>{item.name}</Text>
       <Text style={styles.martLocation}>{item.location}</Text>
     </TouchableOpacity>
   );
 
-  const handleMartPress = (mart) => {
-    console.log(`Navigating to details of ${mart.name}`);
-  };
-
+  
   const filteredMarts = shoppingMarts.filter((mart) =>
     mart.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 70,
     resizeMode: 'contain',
-    borderRadius: 8,
+    borderRadius: 15,
   },
   martName: {
     fontSize: 16,
