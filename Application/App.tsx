@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {Image, View, StatusBar, Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -16,11 +15,11 @@ import LoginScreen from './controllers/screens/startups/LoginScreen';
 import Credentials from './controllers/screens/startups/Credentials';
 import SplashScreen from './controllers/screens/startups/SplashScreen';
 import Launch from './controllers/screens/startups/LaunchScreen';
-import SettingsScreen from './controllers/screens/SettingsScreen';
 import AccInfo from './controllers/screens/navigations/AccInfo';
 import Sidebar from './controllers/screens/Sidebar';
 import VerificationScreen from './controllers/screens/VerificationScreen';
 import NotificationSettings from './controllers/screens/navigations/NotificationSettings';
+import ChangePasswordScreen from './controllers/screens/ChangepasswordScreen';
 ////////////////////////////////////////////////////////////////
 //Declarations
 
@@ -51,7 +50,7 @@ const StackScreen = () => {
   
   return (
     <Stack.Navigator
-      initialRouteName="Register"
+      initialRouteName="MainScreen"
       screenOptions={{
         headerShown: false,
         headerStyle: {
@@ -118,13 +117,7 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
-      <Stack.Screen
-        name="setting"
-        component={SettingsScreen}
-        options={{
-          headerLeft: () => null,
-        }}
-      />
+
       <Stack.Screen
         name="AccountInformation"
         component={AccInfo}
@@ -149,6 +142,13 @@ const StackScreen = () => {
       <Stack.Screen
         name="Verification"
         component={VerificationScreen}
+        options={{
+          headerLeft: () => null,
+        }}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
         options={{
           headerLeft: () => null,
         }}

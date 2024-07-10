@@ -3,3 +3,42 @@
         ) : (
           <Text style={styles.loadingText}>Authenticating...</Text>
         )}
+
+
+----------------------------------------------------------------
+//Before Loadsession Data
+----------------------------------------------------------------
+
+        TouchID.isSupported(optionalConfigObject)
+      .then(biometryType => {
+        if (
+          biometryType === 'FaceID' ||
+          biometryType === 'TouchID' ||
+          biometryType === 'Biometrics'
+        ) {
+          TouchID.authenticate(
+            'To access your account information, please authenticate',
+            optionalConfigObject,
+          )
+            .then(success => {
+              setAuthenticated(true); // User authenticated
+            })
+            .catch(error => {
+              Alert.alert(
+                'Authentication Failed',
+                'You could not be authenticated. Try again or cancel.',
+                [
+                  { text: 'Try Again', onPress: () => navigation.goBack() },
+                  { text: 'Cancel', onPress: () => navigation.goBack() },
+                ],
+              );
+            });
+        }
+      })
+      .catch(error => {
+        // Failure scenario handling for not supported or other errors
+        Alert.alert(
+          'Authentication not supported',
+          'Your device does not support Face ID/Touch ID.',
+        );
+      });

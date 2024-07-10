@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Alert } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../components/config';
 import Cart from './CartScreen';
-
+import Icons from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/Entypo';
 const Tab = createBottomTabNavigator();
 
 const BarcodeScannerScreen = ({ navigation }) => {
@@ -15,19 +18,52 @@ const BarcodeScannerScreen = ({ navigation }) => {
   const [scannedBarcode, setScannedBarcode] = useState(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
-      // Turn off flash when navigating away from the scanner page
       setIsFlashOn(false);
+      setIsCameraOpen(false);
     });
 
     return unsubscribe;
   }, [navigation]);
 
-  const handleBarcodeScan = ({ data }) => {
-    setScannedBarcode(data);
-    setIsConfirmationModalVisible(true);
+  const handleBarcodeScan = async ({ data }) => {
+    if (scannedBarcode) {
+      return; // Prevent further scanning if a barcode has already been scanned
+    }
+
+    try {
+      console.log(`Scanning barcode: ${data}`);
+      setScannedBarcode(data); // Set scannedBarcode immediately
+
+      const querySnapshot = await getDocs(collection(db, 'outlets'));
+      let foundProduct = null;
+
+      querySnapshot.forEach((doc) => {
+        const martItems = doc.data().items || [];
+        console.log(`Checking items in document ${doc.id}:`, martItems);
+        const item = martItems.find((item) => item.barcode === data);
+        if (item) {
+          foundProduct = item;
+        }
+      });
+
+      if (foundProduct) {
+        console.log(`Product found:`, foundProduct);
+        setIsConfirmationModalVisible(true);
+      } else {
+        Alert.alert('Attention', 'Product not found');
+        setScannedBarcode(null); // Reset scannedBarcode if product not found
+        setIsCameraOpen(false); // Close the camera after product not found
+      }
+    } catch (error) {
+      console.error('Error fetching items:', error);
+      Alert.alert('Error fetching items. Please try again.');
+      setScannedBarcode(null); // Reset scannedBarcode in case of an error
+      setIsCameraOpen(false); // Close the camera after error
+    }
   };
 
   const handleScanButtonPress = () => {
@@ -45,12 +81,13 @@ const BarcodeScannerScreen = ({ navigation }) => {
     navigation.navigate('Cart', { scannedBarcode });
     setIsConfirmationModalVisible(false);
     setScannedBarcode(null);
-    setIsCameraOpen(false); // Close the camera after adding to cart
+    setIsCameraOpen(false);
   };
 
   const handleCancelScan = () => {
     setIsConfirmationModalVisible(false);
     setScannedBarcode(null);
+    setIsCameraOpen(false); // Close the camera when scan is canceled
   };
 
   const handleCloseCamera = () => {
@@ -76,18 +113,14 @@ const BarcodeScannerScreen = ({ navigation }) => {
           style={styles.camera}
           type={RNCamera.Constants.Type.back}
           onBarCodeRead={handleBarcodeScan}
-          captureAudio={true}
+          captureAudio={false}
           flashMode={
             isFlashOn
               ? RNCamera.Constants.FlashMode.torch
               : RNCamera.Constants.FlashMode.off
           }
-          autoFocus={true} // Disable autofocus
-          autoFocusPointOfInterest={{ x: 0.5, y: 0.5 }}
-          iosCameraParams={{
-            focusDepth: 0.05,
-          }}>
-          <BarcodeMask />
+          autoFocus={RNCamera.Constants.AutoFocus.on}>
+          <BarcodeMask width={250} height={250} />
         </RNCamera>
       )}
 
@@ -118,9 +151,11 @@ const BarcodeScannerScreen = ({ navigation }) => {
           </View>
         </Modal>
       )}
-      <TouchableOpacity style={styles.closeButton} onPress={handleCloseCamera}>
-        <Text style={styles.buttonText}>Close</Text>
-      </TouchableOpacity>
+      {isCameraOpen && (
+        <TouchableOpacity style={styles.closeButton} onPress={handleCloseCamera}>
+          <Text style={styles.buttonText}>Close</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -143,7 +178,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#A52A2A',
     padding: 10,
     borderRadius: 10,
-    marginLeft: 125,
+    marginLeft: 100,
+    paddingLeft: 40,
+    paddingRight: 40,
   },
   flashButton: {
     position: 'absolute',
@@ -158,7 +195,7 @@ const styles = StyleSheet.create({
   },
   camera: {
     width: '95%',
-    aspectRatio: 16 / 19,
+    aspectRatio: 24 / 19,
     borderRadius: 20,
     overflow: 'hidden',
   },
@@ -213,6 +250,9 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     paddingRight: 25,
     borderRadius: 10,
+    marginLeft: 100,
+    paddingLeft: 40,
+    paddingRight: 40,
   },
 });
 
@@ -238,7 +278,7 @@ const BarcodeScanner = () => {
           headerLeft: () => (
             route.name === 'Scan' && (
               <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Icon name="arrow-back" size={25} color={greyTheme.textColor} style={{ marginLeft: 15 }} />
+                <Icon2 name="chevron-left" size={25} color={greyTheme.textColor} style={{ marginLeft: 10 }} />
               </TouchableOpacity>
             )
           ),

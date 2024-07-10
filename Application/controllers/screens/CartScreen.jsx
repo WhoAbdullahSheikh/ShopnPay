@@ -1,36 +1,57 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native';
-import Colors from "../../src/Color"
-import Receipt from './Receipt';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Colors from "../../src/Color";
+import Receipt from './Receipt'; // Assuming Receipt component is in the same directory
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../components/config';
 
 const Cart = ({ route }) => {
   const { scannedBarcode } = route.params || { scannedBarcode: null };
 
-  // Initialize state to store the cumulative list of scanned products
   const [cart, setCart] = useState([]);
-  const [totalBill, setTotalBill] = useState(0);
+  const [totalBill, setTotalBill] = useState(0); // Initialize totalBill as 0
   const [showReceipt, setShowReceipt] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleAddToCart = () => {
-    // Create a new cart item with the scanned product details
-    const newCartItem = {
-      productName: scannedBarcode,
-      price: 10, // Set the appropriate price
-      quantity: 1, // Initialize quantity to 1
-    };
+  useEffect(() => {
+    if (scannedBarcode) {
+      fetchProductPrice(scannedBarcode);
+    }
+  }, [scannedBarcode]);
 
-    // Update the cart and totalBill
-    setCart([...cart, newCartItem]);
-    setTotalBill(totalBill + newCartItem.price);
+  const fetchProductPrice = async (barcode) => {
+    setLoading(true);
+    try {
+      const querySnapshot = await getDocs(collection(db, 'outlets'),
+        query(collection(db, 'outlets'), where('items.barcode', '==', barcode)));
+
+      querySnapshot.forEach((doc) => {
+        const martItems = doc.data().items || [];
+        const item = martItems.find((item) => item.barcode === barcode);
+        if (item) {
+          const newCartItem = {
+            productName: item.description,
+            price: item.price,
+            quantity: 1,
+          };
+          setCart([...cart, newCartItem]);
+          setTotalBill(totalBill + item.price); // Update totalBill correctly
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+      // Handle error fetching product details
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGenerateReceipt = () => {
-    // Open the receipt modal
     setShowReceipt(true);
   };
 
   const handleCloseReceipt = () => {
-    // Close the receipt modal
     setShowReceipt(false);
   };
 
@@ -38,7 +59,7 @@ const Cart = ({ route }) => {
     const updatedCart = [...cart];
     updatedCart[index].quantity++;
     setCart(updatedCart);
-    setTotalBill(totalBill + updatedCart[index].price);
+    setTotalBill(calculateTotalBill(updatedCart));
   };
 
   const handleDecreaseQuantity = (index) => {
@@ -46,9 +67,33 @@ const Cart = ({ route }) => {
     if (updatedCart[index].quantity > 1) {
       updatedCart[index].quantity--;
       setCart(updatedCart);
-      setTotalBill(totalBill - updatedCart[index].price);
+      setTotalBill(calculateTotalBill(updatedCart));
     }
   };
+
+  const handleRemoveItem = (index) => {
+    const updatedCart = [...cart];
+    setTotalBill(totalBill - (updatedCart[index].price * updatedCart[index].quantity));
+    updatedCart.splice(index, 1);
+    setCart(updatedCart);
+  };
+
+  const calculateTotalBill = (cart) => {
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price * item.quantity;
+    });
+    return total;
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#A52A2A" />
+        <Text style={styles.loadingText}>Fetching Product Details...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
@@ -66,24 +111,28 @@ const Cart = ({ route }) => {
                 <Text style={styles.quantityButton}>+</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.price}>${item.price * item.quantity}</Text>
+            <View style={styles.priceAndDelete}>
+              <Text style={styles.price}>Rs. {item.price * item.quantity}</Text>
+              <TouchableOpacity onPress={() => handleRemoveItem(index)}>
+                <Icon name="delete" size={24} color="red" />
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       />
       {scannedBarcode && (
         <View style={styles.scannedBarcodeContainer}>
           <Text style={styles.scannedBarcodeText}>Scanned Barcode: {scannedBarcode}</Text>
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+          <TouchableOpacity style={styles.addToCartButton} onPress={fetchProductPrice}>
             <Text style={styles.buttonText}>Add to Cart</Text>
           </TouchableOpacity>
         </View>
       )}
-      <Text style={styles.totalBill}>Total Bill: ${totalBill}</Text>
+      <Text style={styles.totalBill}>Total Bill: Rs. {totalBill}</Text>
       <TouchableOpacity style={styles.generateReceiptButton} onPress={handleGenerateReceipt}>
         <Text style={styles.buttonText}>Generate Receipt</Text>
       </TouchableOpacity>
 
-      {/* Receipt Modal */}
       <Modal
         visible={showReceipt}
         animationType="slide"
@@ -92,11 +141,16 @@ const Cart = ({ route }) => {
       >
         <View style={styles.modalContainer}>
           <ScrollView style={styles.receiptContainer}>
-            <Receipt cart={cart} totalBill={totalBill} />
+            <Receipt cart={cart} totalBill={totalBill} calculateTotalBill={calculateTotalBill} />
           </ScrollView>
-          <TouchableOpacity onPress={handleCloseReceipt} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+          <View style={styles.closeButtonContainer}>
+            <TouchableOpacity onPress={handleCloseReceipt} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -104,6 +158,16 @@ const Cart = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#333',
+  },
   cartItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -127,9 +191,18 @@ const styles = StyleSheet.create({
     color: 'green',
     marginHorizontal: 8,
   },
+  priceAndDelete: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   price: {
     fontSize: 16,
     color: 'green',
+  },
+  deleteButton: {
+    fontSize: 20,
+    color: 'red',
+    marginLeft: 10,
   },
   scannedBarcodeContainer: {
     backgroundColor: '#A52A2A',
@@ -162,27 +235,36 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   receiptContainer: {
     backgroundColor: 'white',
     padding: 20,
-    borderRadius: 10,
-    width: '80%',
+    borderRadius: 8,
+    width: '90%',
     maxHeight: '80%',
   },
-  closeButton: {
-    backgroundColor: 'red',
-    padding: 12,
-    borderRadius: 8,
+  closeButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
     marginTop: 20,
+  },
+  closeButton: {
+    backgroundColor: '#A52A2A',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 15,
     alignItems: 'center',
+    width: '30%',
   },
   closeButtonText: {
     color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

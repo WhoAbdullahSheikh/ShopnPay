@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Cart from './CartScreen';
 import ProfileScreen from './ProfileScreen'; // Replace with the correct path to ProfileScreen.js
 import BarcodeScanner from './BarcodeScreen';
-import SettingsScreen from './SettingsScreen';
 import HomeScreen from './HomeScreen';
 import PromotionsScreen from './PromotionsScreen';
 
@@ -20,12 +19,12 @@ const greyTheme = {
 const HeaderWithImage = () => {
   return (
     <View>
-      <ShopNPayLogo />
+      <AppLogo />
     </View>
   );
 };
 
-const ShopNPayLogo = () => (
+const AppLogo = () => (
   <Image
     source={require('../../pics/mainlogo-white.png')}
     style={{
@@ -58,46 +57,7 @@ export default function MainAppScreen({navigation}) {
           }}
         />
 
-        <Tab.Screen
-          name="Cart"
-          component={Cart}
-          options={{
-            tabBarIcon: () => (
-              <Icon name="shopping-cart" size={25} color="white" />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="Scanning"
-          options={{
-            tabBarLabel: '',
-            tabBarIcon: ({color}) => (
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 5,
-                  height: 40,
-                  width: 40,
-                  borderRadius: 10,
-                  backgroundColor: '#d04949',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderWidth: 0,
-                  borderColor: 'white',
-                  shadowColor: 'black',
-                  shadowOffset: {
-                    width: 0,
-                    height: 5,
-                  },
-                  shadowOpacity: 1,
-                  shadowRadius: 7,
-                }}>
-                <Icon name="barcode" color="white" size={25} />
-              </View>
-            ),
-          }}
-          component={BarcodeScanner}
-        />
+       
         <Tab.Screen
           name="Promotions"
           component={PromotionsScreen}
