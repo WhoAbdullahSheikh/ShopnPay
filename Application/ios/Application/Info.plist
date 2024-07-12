@@ -2,7 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -49,17 +48,16 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera for scanning products.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(App_Name) requires FaceID access to allow you quick and secure access.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need access to the microphone for recording audio.</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>$(App_Name) requires FaceID access to allow you quick and secure access.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow app to access device photo library</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Allow app to add photos to device photo library</string>
-
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow app to access device photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -95,8 +93,12 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

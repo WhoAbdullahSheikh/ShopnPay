@@ -372,12 +372,14 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: 'black',
-    width: '60%',
+    width: 240,
     marginBottom: 10,
     padding: 10,
     height: 45,
     borderRadius: 10,
     fontSize: 15,
+    
+    
   },
   pass_input: {
     borderWidth: 1,
@@ -388,6 +390,7 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 10,
     fontSize: 15,
+    
   },
   focusedInput: {
     borderColor: '#A52A2A', // A deep red color for the border

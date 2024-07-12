@@ -60,7 +60,7 @@ const AccInfo = () => {
         Alert.alert('No user details found', 'User details collection is empty.');
       }
     };
-
+  
     loadSessionData();
   }, [navigation]);
 

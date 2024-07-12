@@ -3,7 +3,7 @@ import { Image, View, Text, StyleSheet } from 'react-native';
 
 const Receipt = ({ cart, totalBill }) => {
   const calculateTotal = () => {
-    return parseFloat(totalBill).toFixed(2);
+    return parseFloat(totalBill).toFixed(2); 
   };
 
   const AppLogo = () => (
@@ -27,7 +27,7 @@ const Receipt = ({ cart, totalBill }) => {
 
   return (
     <View style={styles.container}>
-    
+      {/* Cut Paper Design at Top */}
       <View style={styles.title}>
         <AppLogo />
       </View>
@@ -36,7 +36,6 @@ const Receipt = ({ cart, totalBill }) => {
         <Text style={styles.date}><Text style={styles.boldText}>Date:</Text> {getCurrentDate()}</Text>
         <Text style={styles.time}><Text style={styles.boldText}>Time:</Text> {getCurrentTime()}</Text>
       </View>
-      <View style={styles.tableHeader_top}></View>
       <View style={styles.tableHeader_bottom}>
         <Text style={styles.tableHeaderText}>Description</Text>
         <Text style={styles.tableHeaderText}>Qty</Text>
@@ -49,13 +48,13 @@ const Receipt = ({ cart, totalBill }) => {
           <View key={index} style={styles.item}>
             <Text style={styles.tableText}>{item.productName}</Text>
             <Text style={styles.tableText}>{item.quantity}</Text>
-            <Text style={styles.tableText}>{parseFloat(item.price).toFixed(2)}</Text>
-            <Text style={styles.tableText}>{(item.price * item.quantity).toFixed(2)}</Text>
+            <Text style={styles.tableText}>Rs. {parseFloat(item.price).toFixed(2)}</Text> 
+            <Text style={styles.tableText}>Rs. {(item.price * item.quantity).toFixed(2)}</Text>
           </View>
         ))}
       </View>
       <View style={styles.tableHeader_top}></View>
-      <Text style={styles.total}><Text style={styles.boldText}>Total: Rs. </Text> {calculateTotal()}/-</Text>
+      <Text style={styles.total}><Text style={styles.boldText}>Total: Rs. </Text> {calculateTotal()} /-</Text>
       <View style={styles.tableHeader_top}></View>
 
       <View style={styles.notesContainer}>
@@ -63,8 +62,8 @@ const Receipt = ({ cart, totalBill }) => {
         <Text style={styles.noteText}>Bring Invoice for return/exchange within 5 days of purchase.{'\n'}
           No return or Exchange on{'\n'}Crockery, Toys, Cosmetics & Frozen Items{'\n'}</Text>
         <Text style={styles.noteText}><Text style={styles.boldText}>Developed by:</Text> &copy;Shopnpay 2024</Text>
-        <Text style={styles.signatureText}>This receipt is computer-generated and digitally signed. No need of any signatures</Text>
       </View>
+      {/* Cut Paper Design at Bottom */}
     </View>
   );
 };
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   logo: {
-    width: 270,
+    width: 290,
     height: 60,
     resizeMode: 'contain',
     marginBottom: 5,
@@ -159,12 +158,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     color: 'grey',
-  },
-  signatureText: {
-    fontSize: 12,
-    textAlign: 'center',
-    marginTop: 150,
-    fontStyle: 'italic',
   },
 });
 

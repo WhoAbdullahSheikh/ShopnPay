@@ -2,49 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from "../../src/Color";
-import Receipt from './Receipt'; // Assuming Receipt component is in the same directory
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../components/config';
+import Receipt from './Receipt';
 
 const Cart = ({ route }) => {
-  const { scannedBarcode } = route.params || { scannedBarcode: null };
+  const { scannedProduct } = route.params || {};
 
   const [cart, setCart] = useState([]);
-  const [totalBill, setTotalBill] = useState(0); // Initialize totalBill as 0
+  const [totalBill, setTotalBill] = useState(0);
   const [showReceipt, setShowReceipt] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (scannedBarcode) {
-      fetchProductPrice(scannedBarcode);
+    if (scannedProduct) {
+      addProductToCart(scannedProduct);
     }
-  }, [scannedBarcode]);
+  }, [scannedProduct]);
 
-  const fetchProductPrice = async (barcode) => {
-    setLoading(true);
-    try {
-      const querySnapshot = await getDocs(collection(db, 'outlets'),
-        query(collection(db, 'outlets'), where('items.barcode', '==', barcode)));
-
-      querySnapshot.forEach((doc) => {
-        const martItems = doc.data().items || [];
-        const item = martItems.find((item) => item.barcode === barcode);
-        if (item) {
-          const newCartItem = {
-            productName: item.description,
-            price: item.price,
-            quantity: 1,
-          };
-          setCart([...cart, newCartItem]);
-          setTotalBill(totalBill + item.price); // Update totalBill correctly
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching product details:', error);
-      // Handle error fetching product details
-    } finally {
-      setLoading(false);
-    }
+  const addProductToCart = (product) => {
+    const newCartItem = {
+      productName: product.description,
+      price: product.price,
+      quantity: 1,
+    };
+    const updatedCart = [...cart, newCartItem];
+    setCart(updatedCart);
+    setTotalBill(calculateTotalBill(updatedCart));
   };
 
   const handleGenerateReceipt = () => {
@@ -73,9 +55,9 @@ const Cart = ({ route }) => {
 
   const handleRemoveItem = (index) => {
     const updatedCart = [...cart];
-    setTotalBill(totalBill - (updatedCart[index].price * updatedCart[index].quantity));
     updatedCart.splice(index, 1);
     setCart(updatedCart);
+    setTotalBill(calculateTotalBill(updatedCart));
   };
 
   const calculateTotalBill = (cart) => {
@@ -120,14 +102,6 @@ const Cart = ({ route }) => {
           </View>
         )}
       />
-      {scannedBarcode && (
-        <View style={styles.scannedBarcodeContainer}>
-          <Text style={styles.scannedBarcodeText}>Scanned Barcode: {scannedBarcode}</Text>
-          <TouchableOpacity style={styles.addToCartButton} onPress={fetchProductPrice}>
-            <Text style={styles.buttonText}>Add to Cart</Text>
-          </TouchableOpacity>
-        </View>
-      )}
       <Text style={styles.totalBill}>Total Bill: Rs. {totalBill}</Text>
       <TouchableOpacity style={styles.generateReceiptButton} onPress={handleGenerateReceipt}>
         <Text style={styles.buttonText}>Generate Receipt</Text>
@@ -141,16 +115,11 @@ const Cart = ({ route }) => {
       >
         <View style={styles.modalContainer}>
           <ScrollView style={styles.receiptContainer}>
-            <Receipt cart={cart} totalBill={totalBill} calculateTotalBill={calculateTotalBill} />
+            <Receipt cart={cart} totalBill={totalBill} />
           </ScrollView>
-          <View style={styles.closeButtonContainer}>
-            <TouchableOpacity onPress={handleCloseReceipt} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={handleCloseReceipt} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>
@@ -246,18 +215,13 @@ const styles = StyleSheet.create({
     width: '90%',
     maxHeight: '80%',
   },
-  closeButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: 20,
-  },
   closeButton: {
     backgroundColor: '#A52A2A',
     padding: 12,
     borderWidth: 1,
     borderColor: 'white',
     borderRadius: 15,
+    marginTop: 20,
     alignItems: 'center',
     width: '30%',
   },
