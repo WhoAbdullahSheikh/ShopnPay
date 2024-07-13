@@ -40,7 +40,7 @@ const Receipt = ({ cart, totalBill }) => {
       <View style={styles.tableHeader_bottom}>
         <Text style={styles.tableHeaderText}>Description</Text>
         <Text style={styles.tableHeaderText}>Qty</Text>
-        <Text style={styles.tableHeaderText}>Unit Price</Text>
+        <Text style={styles.tableHeaderText}>Price</Text>
         <Text style={styles.tableHeaderText}>Total</Text>
       </View>
 
@@ -62,6 +62,8 @@ const Receipt = ({ cart, totalBill }) => {
         <Text style={styles.noteText}></Text>
         <Text style={styles.noteText}>Bring Invoice for return/exchange within 5 days of purchase.{'\n'}
           No return or Exchange on{'\n'}Crockery, Toys, Cosmetics & Frozen Items{'\n'}</Text>
+        
+        <Text style={styles.signatureText}>This receipt is computer-generated and digitally signed. No need of any signatures</Text>
         <Text style={styles.noteText}><Text style={styles.boldText}>Developed by:</Text> &copy;Shopnpay 2024</Text>
       </View>
       {/* Cut Paper Design at Bottom */}
@@ -160,6 +162,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'grey',
   },
+  signatureText: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 170,
+    fontStyle: 'italic',
+    color: 'grey',
+    marginBottom: 10,
+  }
 });
 
 export default Receipt;
