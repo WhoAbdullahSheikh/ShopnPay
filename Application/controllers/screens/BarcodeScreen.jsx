@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Alert, Dimensions, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,6 +18,8 @@ const BarcodeScannerScreen = ({ navigation }) => {
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [isConfirmationModalVisible, setIsConfirmationModalVisible] = useState(false);
   const [scannedProduct, setScannedProduct] = useState(null);
+  const [barcodeMaskWidth, setBarcodeMaskWidth] = useState('80%');
+  const [barcodeMaskHeight, setBarcodeMaskHeight] = useState('80%');
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -53,7 +55,7 @@ const BarcodeScannerScreen = ({ navigation }) => {
         setScannedProduct(foundProduct);
         setIsConfirmationModalVisible(true);
       } else {
-        Alert.alert('Attention','Product not found');
+        Alert.alert('Attention', 'Product not found');
         setScannedBarcode(null); // Reset scannedBarcode if product not found
         setIsCameraOpen(false); // Close the camera after product not found
       }
@@ -71,6 +73,7 @@ const BarcodeScannerScreen = ({ navigation }) => {
       setIsFlashOn(false);
     }
   };
+
 
   const handleToggleFlash = () => {
     setIsFlashOn(!isFlashOn);
@@ -92,6 +95,18 @@ const BarcodeScannerScreen = ({ navigation }) => {
   const handleCloseCamera = () => {
     setIsCameraOpen(false);
   };
+
+  const updateBarcodeMaskSize = () => {
+    // Get dimensions of the screen
+    const { width, height } = Dimensions.get('window');
+    // Set the BarcodeMask size to 50% of the screen dimensions
+    setBarcodeMaskWidth(width * 0.9);
+    setBarcodeMaskHeight(height * 0.28);
+  };
+ 
+  useEffect(() => {
+    updateBarcodeMaskSize();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -119,7 +134,15 @@ const BarcodeScannerScreen = ({ navigation }) => {
               : RNCamera.Constants.FlashMode.off
           }
           autoFocus={RNCamera.Constants.AutoFocus.on}>
-          <BarcodeMask />
+          <BarcodeMask
+            width={barcodeMaskWidth}
+            height={barcodeMaskHeight}
+            edgeColor="rgba(255, 255, 255, 1)"
+            edgeRadius={20}
+            borderRadius={10}
+            edgeBorderWidth={10}
+
+          />
         </RNCamera>
       )}
 
@@ -162,6 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: 20,
+
   },
   header: {
     flexDirection: 'row',
@@ -174,8 +198,10 @@ const styles = StyleSheet.create({
   scanButton: {
     backgroundColor: '#A52A2A',
     padding: 10,
-    borderRadius: 10,
-    marginLeft: 125,
+    borderRadius: 20,
+    width: '50%',
+    alignItems: 'center',
+    marginLeft: 90,
   },
   flashButton: {
     position: 'absolute',
@@ -190,7 +216,8 @@ const styles = StyleSheet.create({
   },
   camera: {
     width: '95%',
-    aspectRatio: 16 / 19,
+    height: '70%',
+    aspectRatio: 20 / 10,
     borderRadius: 20,
     overflow: 'hidden',
   },
@@ -225,26 +252,29 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
+    height: '25%',
     backgroundColor: 'white',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 20,
     width: '80%',
     alignItems: 'center',
   },
   modalButton: {
     backgroundColor: '#A52A2A',
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 20,
+    padding: 12,
+    borderRadius: 20,
+    marginTop: 10,
+    width: '90%',
+    alignItems: 'center',
   },
   closeButton: {
     position: 'absolute',
     bottom: 20,
     backgroundColor: '#A52A2A',
     padding: 10,
-    paddingLeft: 25,
-    paddingRight: 25,
-    borderRadius: 10,
+    borderRadius: 20,
+    width: '90%',
+    alignItems: 'center',
   },
 });
 
@@ -254,7 +284,24 @@ const BarcodeScanner = () => {
     backgroundColor: '#A52A2A',
     textColor: 'white',
   };
-
+  const AppLogo = () => (
+    <Image
+      source={require('../../pics/mainlogo-white.png')}
+      style={{
+        width: 150,
+        height: 60,
+        resizeMode: 'contain',
+        marginBottom: 10,
+      }}
+    />
+  );
+  const HeaderWithImage = () => {
+    return (
+      <View>
+        <AppLogo />
+      </View>
+    );
+  };
   return (
     <View style={styles2.container}>
       <Tab.Navigator
@@ -279,6 +326,7 @@ const BarcodeScanner = () => {
           name="Scan"
           component={BarcodeScannerScreen}
           options={{
+            headerTitle: () => <HeaderWithImage />,
             tabBarIcon: ({ color, size }) => <Icon name="barcode" size={size} color={color} />,
           }}
         />
@@ -286,6 +334,7 @@ const BarcodeScanner = () => {
           name="Cart"
           component={Cart}
           options={{
+            headerTitle: () => <HeaderWithImage />,
             tabBarIcon: ({ color, size }) => <Icon name="cart" size={size} color={color} />,
           }}
         />

@@ -36,6 +36,7 @@ const Receipt = ({ cart, totalBill }) => {
         <Text style={styles.date}><Text style={styles.boldText}>Date:</Text> {getCurrentDate()}</Text>
         <Text style={styles.time}><Text style={styles.boldText}>Time:</Text> {getCurrentTime()}</Text>
       </View>
+      <View style={styles.tableHeader_top}></View>
       <View style={styles.tableHeader_bottom}>
         <Text style={styles.tableHeaderText}>Description</Text>
         <Text style={styles.tableHeaderText}>Qty</Text>
@@ -48,13 +49,13 @@ const Receipt = ({ cart, totalBill }) => {
           <View key={index} style={styles.item}>
             <Text style={styles.tableText}>{item.productName}</Text>
             <Text style={styles.tableText}>{item.quantity}</Text>
-            <Text style={styles.tableText}>Rs. {parseFloat(item.price).toFixed(2)}</Text> 
-            <Text style={styles.tableText}>Rs. {(item.price * item.quantity).toFixed(2)}</Text>
+            <Text style={styles.tableText}> {parseFloat(item.price).toFixed(2)}/-</Text> 
+            <Text style={styles.tableText}> {(item.price * item.quantity).toFixed(2)}</Text>
           </View>
         ))}
       </View>
       <View style={styles.tableHeader_top}></View>
-      <Text style={styles.total}><Text style={styles.boldText}>Total: Rs. </Text> {calculateTotal()} /-</Text>
+      <Text style={styles.total}><Text style={styles.boldText}>Total: Rs.</Text>{calculateTotal()}/-</Text>
       <View style={styles.tableHeader_top}></View>
 
       <View style={styles.notesContainer}>

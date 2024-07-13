@@ -13,10 +13,14 @@ const Cart = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (scannedProduct) {
+    if (scannedProduct && !isProductInCart(scannedProduct)) {
       addProductToCart(scannedProduct);
     }
   }, [scannedProduct]);
+
+  const isProductInCart = (product) => {
+    return cart.some(item => item.productName === product.description);
+  };
 
   const addProductToCart = (product) => {
     const newCartItem = {
@@ -187,9 +191,10 @@ const styles = StyleSheet.create({
   generateReceiptButton: {
     backgroundColor: '#A52A2A',
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 20,
     margin: 20,
     alignItems: 'center',
+    
   },
   buttonText: {
     color: 'white',
