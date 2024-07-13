@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Alert, Dimensions, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../components/config';
 import Cart from './CartScreen';
@@ -21,13 +21,16 @@ const BarcodeScannerScreen = ({ navigation }) => {
   const [barcodeMaskWidth, setBarcodeMaskWidth] = useState('80%');
   const [barcodeMaskHeight, setBarcodeMaskHeight] = useState('80%');
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      setIsFlashOn(false);
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+  useFocusEffect(
+    useCallback(() => {
+      setIsCameraOpen(true);
+      return () => {
+        setIsCameraOpen(false);
+        setIsFlashOn(false);
+        setScannedBarcode(null);
+      };
+    }, [])
+  );
 
   const handleBarcodeScan = async ({ data }) => {
     if (scannedBarcode) {
@@ -74,7 +77,6 @@ const BarcodeScannerScreen = ({ navigation }) => {
     }
   };
 
-
   const handleToggleFlash = () => {
     setIsFlashOn(!isFlashOn);
   };
@@ -92,10 +94,6 @@ const BarcodeScannerScreen = ({ navigation }) => {
     setIsCameraOpen(false); // Close the camera when scan is canceled
   };
 
-  const handleCloseCamera = () => {
-    setIsCameraOpen(false);
-  };
-
   const updateBarcodeMaskSize = () => {
     // Get dimensions of the screen
     const { width, height } = Dimensions.get('window');
@@ -103,7 +101,7 @@ const BarcodeScannerScreen = ({ navigation }) => {
     setBarcodeMaskWidth(width * 0.9);
     setBarcodeMaskHeight(height * 0.28);
   };
- 
+
   useEffect(() => {
     updateBarcodeMaskSize();
   }, []);
@@ -141,7 +139,6 @@ const BarcodeScannerScreen = ({ navigation }) => {
             edgeRadius={20}
             borderRadius={10}
             edgeBorderWidth={10}
-
           />
         </RNCamera>
       )}
@@ -173,7 +170,7 @@ const BarcodeScannerScreen = ({ navigation }) => {
           </View>
         </Modal>
       )}
-      <TouchableOpacity style={styles.closeButton} onPress={handleCloseCamera}>
+      <TouchableOpacity style={styles.closeButton} onPress={() => setIsCameraOpen(false)}>
         <Text style={styles.buttonText}>Close</Text>
       </TouchableOpacity>
     </View>
@@ -185,7 +182,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingTop: 20,
-
   },
   header: {
     flexDirection: 'row',
@@ -317,7 +313,7 @@ const BarcodeScanner = () => {
           headerLeft: () => (
             route.name === 'Scan' && (
               <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Icon name="arrow-back" size={25} color={greyTheme.textColor} style={{ marginLeft: 15 }} />
+                <Icon name="arrow-back" size={25}  color={greyTheme.textColor} style={{ marginLeft: 15,  }} />
               </TouchableOpacity>
             )
           ),

@@ -83,6 +83,8 @@ const Cart = ({ route }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <Text style={styles.heading}>Cart</Text>
+      <View style={styles.tableHeader_bottom}></View>
       <FlatList
         data={cart}
         keyExtractor={(item, index) => index.toString()}
@@ -106,7 +108,7 @@ const Cart = ({ route }) => {
           </View>
         )}
       />
-      <Text style={styles.totalBill}>Total Bill: Rs. {totalBill}</Text>
+      <Text style={styles.totalBill}><Text style={styles.boldText}>Total Bill: </Text>Rs. {totalBill}/-</Text>
       <TouchableOpacity style={styles.generateReceiptButton} onPress={handleGenerateReceipt}>
         <Text style={styles.buttonText}>Generate Receipt</Text>
       </TouchableOpacity>
@@ -135,6 +137,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  heading: {
+    textAlign: 'center',
+    fontSize: 25,
+    marginVertical: 10,
+    color: 'black',
+    fontFamily: 'Raleway-Regular',
+    fontWeight: 'bold',
+  },
+  tableHeader_bottom: {
+    flexDirection: 'row',
+    borderBottomWidth: 0.4,
+    borderBottomColor: '#000',
+    marginBottom: 10,
+    paddingBottom: 5,
+    width: '92%',
+    marginLeft: 15,
+
   },
   loadingText: {
     marginTop: 10,
@@ -194,7 +214,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 20,
     alignItems: 'center',
-    
+
   },
   buttonText: {
     color: 'white',
@@ -205,7 +225,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginVertical: 10,
     color: 'black',
+    fontFamily:'Raleway-Regular',
     backgroundColor: 'transparent',
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
   modalContainer: {
     flex: 1,
