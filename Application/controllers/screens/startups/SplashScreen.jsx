@@ -10,7 +10,7 @@ const SplashScreen = ({ navigation }) => {
 
   useEffect(() => {
     const navigateToNextScreen = () => {
-      navigation.replace('Register'); // Replace with the name of your next screen
+      navigation.replace('Login'); // Replace with the name of your next screen
     };
 
     Animated.timing(fadeAnim, {
