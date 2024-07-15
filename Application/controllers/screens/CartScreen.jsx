@@ -3,9 +3,11 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView, 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from "../../src/Color";
 import Receipt from './Receipt';
+import { useNavigation } from '@react-navigation/native';
 
 const Cart = ({ route }) => {
   const { scannedProduct } = route.params || {};
+  const navigation = useNavigation();
 
   const [cart, setCart] = useState([]);
   const [totalBill, setTotalBill] = useState(0);
@@ -35,6 +37,7 @@ const Cart = ({ route }) => {
 
   const handleGenerateReceipt = () => {
     setShowReceipt(true);
+    
   };
 
   const handleCloseReceipt = () => {
@@ -70,6 +73,17 @@ const Cart = ({ route }) => {
       total += item.price * item.quantity;
     });
     return total;
+  };
+
+  const handleConfirmReceipt = () => {
+    const qrData = {
+      cart,
+      totalBill,
+      date: new Date().toLocaleDateString(),
+      time: new Date().toLocaleTimeString()
+    };
+    navigation.navigate('qrcode', { qrData });
+    handleCloseReceipt(); // Close the modal
   };
 
   if (loading) {
@@ -123,9 +137,14 @@ const Cart = ({ route }) => {
           <ScrollView style={styles.receiptContainer}>
             <Receipt cart={cart} totalBill={totalBill} />
           </ScrollView>
-          <TouchableOpacity onPress={handleCloseReceipt} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={handleCloseReceipt} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleConfirmReceipt} style={styles.confirmButton}>
+              <Text style={styles.confirmButtonText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -154,7 +173,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     width: '92%',
     marginLeft: 15,
-
   },
   loadingText: {
     marginTop: 10,
@@ -214,22 +232,22 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 20,
     alignItems: 'center',
-
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontFamily: 'Raleway-Bold',
   },
   totalBill: {
     textAlign: 'center',
     fontSize: 20,
     marginVertical: 10,
     color: 'black',
-    fontFamily:'Raleway-Regular',
     backgroundColor: 'transparent',
   },
   boldText: {
     fontWeight: 'bold',
+    fontFamily: 'Raleway-Regular',
   },
   modalContainer: {
     flex: 1,
@@ -247,7 +265,6 @@ const styles = StyleSheet.create({
   closeButton: {
     backgroundColor: '#A52A2A',
     padding: 12,
-    borderWidth: 0.5,
     borderColor: 'white',
     borderRadius: 15,
     marginTop: 20,
@@ -258,7 +275,34 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'Raleway-Regular',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 2,
+  },
+  confirmButton: {
+    backgroundColor: '#A52A2A',
+    padding: 12,
+    borderColor: 'white',
+    borderRadius: 15,
+    marginTop: 20,
+    alignItems: 'center',
+    width: '30%',
+    marginLeft: 20, // Added margin to create space between buttons
+  },
+  confirmButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'Raleway-Regular',
+  },
+  qrCodeContainer: {
+    alignItems: 'center',
+    marginVertical: 20,
   },
 });
+
 
 export default Cart;

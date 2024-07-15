@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Text, StyleSheet } from 'react-native';
+import { Image, View, Text, StyleSheet, ScrollView } from 'react-native';
 
 const Receipt = ({ cart, totalBill }) => {
   const calculateTotal = () => {
@@ -21,65 +21,80 @@ const Receipt = ({ cart, totalBill }) => {
 
   const getCurrentTime = () => {
     const current = new Date();
-    const time = `${current.getHours()}:${current.getMinutes()}`;
-    return `${time}`;
+    let hours = current.getHours();
+    const minutes = current.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+    return `${hours}:${minutesStr} ${ampm}`;
   };
 
   return (
-    <View style={styles.container}>
-      {/* Cut Paper Design at Top */}
-      <View style={styles.title}>
-        <AppLogo />
-      </View>
-      <Text style={styles.title2}>E-Receipt</Text>
-      <View style={styles.dateTimeContainer}>
-        <Text style={styles.date}><Text style={styles.boldText}>Date:</Text> {getCurrentDate()}</Text>
-        <Text style={styles.time}><Text style={styles.boldText}>Time:</Text> {getCurrentTime()}</Text>
-      </View>
-      <View style={styles.tableHeader_top}></View>
-      <View style={styles.tableHeader_bottom}>
-        <Text style={styles.tableHeaderText}>Description</Text>
-        <Text style={styles.tableHeaderText}>Qty</Text>
-        <Text style={styles.tableHeaderText}>Price</Text>
-        <Text style={styles.tableHeaderText}>Total</Text>
-      </View>
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
+        {/* Cut Paper Design at Top */}
+        <View style={styles.title}>
+          <AppLogo />
+        </View>
+        <Text style={styles.title2}>E-Invoice</Text>
+        <View style={styles.dateTimeContainer}>
+          <Text style={styles.date}><Text style={styles.boldText}>Date:</Text> {getCurrentDate()}</Text>
+          <Text style={styles.time}><Text style={styles.boldText}>Time:</Text> {getCurrentTime()}</Text>
+        </View>
+        <View style={styles.tableHeader_top}></View>
+        <View style={styles.tableHeader_bottom}>
+          <Text style={styles.tableHeaderText}>Description</Text>
+          <Text style={styles.tableHeaderText}>Qty</Text>
+          <Text style={styles.tableHeaderText}>Price</Text>
+          <Text style={styles.tableHeaderText}>Total</Text>
+        </View>
 
-      <View style={styles.itemsContainer}>
-        {cart.map((item, index) => (
-          <View key={index} style={styles.item}>
-            <Text style={styles.tableText}>{item.productName}</Text>
-            <Text style={styles.tableText}>{item.quantity}</Text>
-            <Text style={styles.tableText}> {parseFloat(item.price).toFixed(2)}/-</Text> 
-            <Text style={styles.tableText}> {(item.price * item.quantity).toFixed(2)}</Text>
-          </View>
-        ))}
-      </View>
-      <View style={styles.tableHeader_top}></View>
-      <Text style={styles.total}><Text style={styles.boldText}>Total: Rs.</Text>{calculateTotal()}/-</Text>
-      <View style={styles.tableHeader_top}></View>
+        <View style={styles.itemsContainer}>
+          {cart.map((item, index) => (
+            <View key={index} style={styles.item}>
+              <Text style={styles.tableText}>{item.productName}</Text>
+              <Text style={styles.tableText}>{item.quantity}</Text>
+              <Text style={styles.tableText}> {parseFloat(item.price).toFixed(2)}/-</Text> 
+              <Text style={styles.tableText}> {(item.price * item.quantity).toFixed(2)}</Text>
+            </View>
+          ))}
+        </View>
+        <View style={styles.tableHeader_top}></View>
+        <Text style={styles.total}><Text style={styles.boldText}>Total: </Text>Rs. {calculateTotal()}/-</Text>
+        <View style={styles.tableHeader_top}></View>
 
-      <View style={styles.notesContainer}>
-        <Text style={styles.noteText}></Text>
-        <Text style={styles.noteText}>Bring Invoice for return/exchange within 5 days of purchase.{'\n'}
-          No return or Exchange on{'\n'}Crockery, Toys, Cosmetics & Frozen Items{'\n'}</Text>
-        
-        <Text style={styles.signatureText}>This receipt is computer-generated and digitally signed. No need of any signatures</Text>
-        <Text style={styles.noteText}><Text style={styles.boldText}>Developed by:</Text> &copy;Shopnpay 2024</Text>
+        <View style={styles.notesContainer}>
+          <Text style={styles.noteText}></Text>
+          <Text style={styles.noteText}>Bring Invoice for return/exchange within 5 days of purchase.{'\n'}
+            No return or Exchange on{'\n'}Crockery, Toys, Cosmetics & Frozen Items{'\n'}</Text>
+          
+          <Text style={styles.signatureText}>This receipt is computer-generated and digitally signed. No need of any signatures</Text>
+          <Text style={styles.noteText}><Text style={styles.boldText}>Developed by:</Text> &copy;Shopnpay 2024</Text>
+        </View>
+        {/* Cut Paper Design at Bottom */}
       </View>
-      {/* Cut Paper Design at Bottom */}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
     position: 'relative',
+    borderWidth: 3,
+    borderStyle: 'dashed',
+    borderColor: '#000',
+    paddingBottom: 60,
   },
   logo: {
-    width: 290,
+    width: '100%',
     height: 60,
     resizeMode: 'contain',
     marginBottom: 5,
@@ -88,13 +103,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title2: {
-    fontSize: 22,
+    fontSize: 23,
     fontWeight: 'bold',
     marginBottom: 5,
     textAlign: 'center',
+    fontFamily: 'Raleway-Regular',
   },
   boldText: {
     fontWeight: 'bold',
+    fontFamily: 'Raleway-Regular',
   },
   dateTimeContainer: {
     marginTop: 15,
@@ -131,18 +148,19 @@ const styles = StyleSheet.create({
   },
   tableHeaderText: {
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: 13,
     flex: 1,
     textAlign: 'center',
+    fontFamily: 'Raleway-Regular',
   },
   itemsContainer: {
-    marginTop: 10,
-    marginBottom: 30,
+    marginTop: 5,
+    marginBottom: 15,
   },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   tableText: {
     fontSize: 12,
@@ -150,22 +168,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   total: {
-    fontSize: 12,
+    fontSize: 13,
     alignSelf: 'flex-end',
   },
   notesContainer: {
-    marginTop: 20,
+    marginTop: 10,
     paddingTop: 10,
   },
   noteText: {
-    fontSize: 14,
+    fontSize: 13,
     textAlign: 'center',
     color: 'grey',
   },
   signatureText: {
     fontSize: 12,
     textAlign: 'center',
-    marginTop: 170,
+    marginTop: 150,
     fontStyle: 'italic',
     color: 'grey',
     marginBottom: 10,

@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, Alert, Dimensions, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native'; // Update import
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../components/config';
 import Cart from './CartScreen';
@@ -20,17 +20,7 @@ const BarcodeScannerScreen = ({ navigation }) => {
   const [scannedProduct, setScannedProduct] = useState(null);
   const [barcodeMaskWidth, setBarcodeMaskWidth] = useState('80%');
   const [barcodeMaskHeight, setBarcodeMaskHeight] = useState('80%');
-
-  useFocusEffect(
-    useCallback(() => {
-      setIsCameraOpen(true);
-      return () => {
-        setIsCameraOpen(false);
-        setIsFlashOn(false);
-        setScannedBarcode(null);
-      };
-    }, [])
-  );
+  const isFocused = useIsFocused(); // Hook to check if screen is focused
 
   const handleBarcodeScan = async ({ data }) => {
     if (scannedBarcode) {
@@ -105,6 +95,22 @@ const BarcodeScannerScreen = ({ navigation }) => {
   useEffect(() => {
     updateBarcodeMaskSize();
   }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      // Open the camera when the screen is focused
+      setIsCameraOpen(true);
+    } else {
+      // Close the camera when leaving the screen
+      setIsCameraOpen(false);
+      setIsFlashOn(false);
+      setScannedBarcode(null);
+      // Ensure camera is stopped when leaving the screen
+      if (cameraRef.current) {
+        cameraRef.current.pausePreview();
+      }
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -278,7 +284,7 @@ const BarcodeScanner = () => {
   const navigation = useNavigation();
   const greyTheme = {
     backgroundColor: '#A52A2A',
-    textColor: 'white',
+    textColor: '#FFFFFF',
   };
   const AppLogo = () => (
     <Image
