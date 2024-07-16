@@ -41,10 +41,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 10,
+    paddingTop: 0,
   },
   title: {
-    paddingTop: 50,
+    paddingTop: 30,
     fontSize: 25,
     fontFamily: 'Raleway-Bold',
   },

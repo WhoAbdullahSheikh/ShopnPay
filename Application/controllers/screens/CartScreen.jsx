@@ -105,17 +105,36 @@ const Cart = ({ route }) => {
     return total;
   };
 
-  const handleConfirmReceipt = () => {
+  const handleConfirmReceipt = async () => {
     const qrData = {
       cart,
       totalBill,
       date: new Date().toLocaleDateString(),
       time: new Date().toLocaleTimeString()
     };
+  
+    // Save to purchase history
+    try {
+      const purchaseHistoryData = await AsyncStorage.getItem('@purchaseHistory');
+      let purchaseHistory = [];
+      if (purchaseHistoryData !== null) {
+        purchaseHistory = JSON.parse(purchaseHistoryData);
+      }
+      purchaseHistory.push(qrData);
+      await AsyncStorage.setItem('@purchaseHistory', JSON.stringify(purchaseHistory));
+    } catch (error) {
+      console.error('Error saving purchase history to AsyncStorage:', error);
+    }
+  
+    // Clear cart
+    setCart([]);
+    setTotalBill(0);
+  
+    // Navigate to QR code screen
     navigation.navigate('qrcode', { qrData });
     handleCloseReceipt(); // Close the modal
   };
-
+  
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -245,17 +264,6 @@ const styles = StyleSheet.create({
     color: 'red',
     marginLeft: 10,
   },
-  scannedBarcodeContainer: {
-    backgroundColor: '#A52A2A',
-    padding: 10,
-    marginVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  scannedBarcodeText: {
-    color: 'white',
-    fontSize: 16,
-  },
   generateReceiptButton: {
     backgroundColor: '#A52A2A',
     padding: 12,
@@ -305,32 +313,25 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    fontFamily: 'Raleway-Regular',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 2,
   },
   confirmButton: {
     backgroundColor: '#A52A2A',
     padding: 12,
-    borderColor: 'white',
     borderRadius: 15,
     marginTop: 20,
     alignItems: 'center',
     width: '30%',
-    marginLeft: 20, // Added margin to create space between buttons
   },
   confirmButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    fontFamily: 'Raleway-Regular',
   },
-  qrCodeContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 10,
   },
 });
 

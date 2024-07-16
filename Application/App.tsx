@@ -26,7 +26,7 @@ import VerificationScreen from './controllers/screens/VerificationScreen';
 import NotificationSettings from './controllers/screens/navigations/NotificationSettings';
 import ChangePasswordScreen from './controllers/screens/ChangepasswordScreen';
 import QRCodeScreen from './controllers/screens/QRCodeScreen';
-
+import Purchasehistory from './controllers/screens/PurchaseHistory';
 const Stack = createStackNavigator();
 
 const greyTheme = {
@@ -133,9 +133,20 @@ const StackScreen = () => {
       <Stack.Screen
         name="NotificationSettings"
         component={NotificationSettings}
-        options={{
-          headerLeft: () => null,
-        }}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: () => <HeaderWithImage />,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon
+                name="arrow-back"
+                size={25}
+                color={greyTheme.textColor}
+                style={{marginLeft: 15}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="Cart"
@@ -157,6 +168,24 @@ const StackScreen = () => {
         options={{
           headerLeft: () => null,
         }}
+      />
+      <Stack.Screen
+        name="purchaseHistory"
+        component={Purchasehistory}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: () => <HeaderWithImage />,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon
+                name="arrow-back"
+                size={25}
+                color={greyTheme.textColor}
+                style={{marginLeft: 15}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="qrcode"

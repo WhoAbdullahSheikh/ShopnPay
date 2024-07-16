@@ -19,6 +19,7 @@ import jsonImage from '../../../pics/avatar.gif';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../components/config';
+import TouchID from 'react-native-touch-id';
 
 const AccInfo = () => {
   const navigation = useNavigation();
@@ -28,6 +29,10 @@ const AccInfo = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const optionalConfigObject = {
+      unifiedErrors: false,
+      passcodeFallback: false,
+    };
     const loadSessionData = async () => {
       try {
         const session = await AsyncStorage.getItem('userSession');
@@ -60,7 +65,40 @@ const AccInfo = () => {
         Alert.alert('No user details found', 'User details collection is empty.');
       }
     };
-  
+    TouchID.isSupported(optionalConfigObject)
+    .then(biometryType => {
+      if (
+        biometryType === 'FaceID' ||
+        biometryType === 'TouchID' ||
+        biometryType === 'Biometrics'
+      ) {
+        TouchID.authenticate(
+          'To access your account information, please authenticate',
+          optionalConfigObject,
+        )
+          .then(success => {
+            setAuthenticated(true); // User authenticated
+          })
+          .catch(error => {
+            Alert.alert(
+              'Authentication Failed',
+              'You could not be authenticated. Try again or cancel.',
+              [
+                { text: 'Try Again', onPress: () => navigation.goBack() },
+                { text: 'Cancel', onPress: () => navigation.goBack() },
+              ],
+            );
+          });
+      }
+    })
+    .catch(error => {
+      // Failure scenario handling for not supported or other errors
+      Alert.alert(
+        'Authentication not supported',
+        'Your device does not support Face ID/Touch ID.',
+      );
+    });
+
     loadSessionData();
   }, [navigation]);
 
@@ -75,45 +113,57 @@ const AccInfo = () => {
   }
 
   return (
+
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.container}>
-        <TouchableOpacity style={[styles.cancelButton]} onPress={() => navigation.goBack()}>
-          <Icon2 name="close" size={30} color="black" />
+      
+        <View style={styles.container}>
+          <TouchableOpacity style={[styles.cancelButton]} onPress={() => navigation.goBack()}>
+            <Icon2 name="close" size={30} color="black" />
 
-        </TouchableOpacity>
-        <View style={styles.profileContainer}>
-          <Image source={jsonImage} style={styles.profileImage} />
-          <Text style={styles.profileName}>{name}</Text>
-
-        </View>
-        <View style={styles.actionsContainer}>
-          <Text style={styles.label}>Name</Text>
-          <TextInput
-            style={styles.input}
-            value={name}
-
-          />
-          <Text style={styles.label}>Phone</Text>
-          <TextInput
-            style={styles.input}
-            value={phoneNumber}
-
-          />
-
-          
-          <TouchableOpacity
-            style={[styles.actionButton, styles.inputMargin]}
-            onPress={() => navigation.navigate('ChangePassword')}
-          >
-            <Icon name="lock-closed" size={24} color="white" />
-            <Text style={[styles.actionButtonText]}>Change Password</Text>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Icon name="arrow-forward-circle" size={24} color="white" />
-            </View>
           </TouchableOpacity>
-          
+          <View style={styles.profileContainer}>
+            <Image source={jsonImage} style={styles.profileImage} />
+            <Text style={styles.profileName}>{name}</Text>
+
+          </View>
+          <View style={styles.actionsContainer}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              style={styles.input}
+              value={name}
+
+            />
+            <Text style={styles.label}>Phone</Text>
+            <TextInput
+              style={styles.input}
+              value={phoneNumber}
+
+            />
+
+
+            <TouchableOpacity
+              style={[styles.actionButton, styles.inputMargin]}
+              onPress={() => navigation.navigate('ChangePassword')}
+            >
+              <Icon name="lock-closed" size={24} color="white" />
+              <Text style={[styles.actionButtonText]}>Change Password</Text>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <Icon name="arrow-forward-circle" size={24} color="white" />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => navigation.navigate('purchaseHistory')}
+            >
+              <Icon name="lock-closed" size={24} color="white" />
+              <Text style={[styles.actionButtonText]}>Purchasing History</Text>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <Icon name="arrow-forward-circle" size={24} color="white" />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      
     </ScrollView>
   );
 };
