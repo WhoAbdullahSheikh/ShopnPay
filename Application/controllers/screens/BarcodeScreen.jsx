@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+    fontFamily: 'Raleway-Bold',
   },
   camera: {
     width: '95%',

@@ -1,31 +1,78 @@
 
 
 import QRCode from 'react-native-qrcode-svg';
-import React, { } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
+import TouchID from 'react-native-touch-id';
+
 const Tab = createBottomTabNavigator();
 
 const QRCodeScreen = ({ route }) => {
-
+    const [authenticated, setAuthenticated] = useState(false);
     const { qrData } = route.params;
     const navigation = useNavigation();
-
+    useEffect(() => {
+        const optionalConfigObject = {
+            unifiedErrors: false,
+            passcodeFallback: false,
+        };
+        TouchID.isSupported(optionalConfigObject)
+            .then(biometryType => {
+                if (
+                    biometryType === 'FaceID' ||
+                    biometryType === 'TouchID' ||
+                    biometryType === 'Biometrics'
+                ) {
+                    TouchID.authenticate(
+                        'To access your account information, please authenticate',
+                        optionalConfigObject,
+                    )
+                        .then(success => {
+                            setAuthenticated(true); // User authenticated
+                        })
+                        .catch(error => {
+                            Alert.alert(
+                                'Authentication Failed',
+                                'You could not be authenticated. Try again or cancel.',
+                                [
+                                    { text: 'Try Again', onPress: () => navigation.goBack() },
+                                    { text: 'Cancel', onPress: () => navigation.goBack() },
+                                ],
+                            );
+                        });
+                }
+            })
+            .catch(error => {
+                // Failure scenario handling for not supported or other errors
+                Alert.alert(
+                    'Authentication not supported',
+                    'Your device does not support Face ID/Touch ID.',
+                );
+            });
+    }, [navigation]);
     return (<View style={styles.container}>
-        <Text style={styles.title}>Scan <Text style={styles.colorful}>Code</Text> & <Text style={styles.colorful}>Checkout</Text>!</Text>
-        <Text style={styles.heading}>E-Invoice QR Code</Text>
-        <QRCode
-            value={JSON.stringify(qrData)}
-            size={250}
-        />
-        <View style={styles.notesContainer}>
-            <Text style={styles.noteText}></Text>
-            <Text style={styles.noteText}>Scan this code on cash counter to confirm your shopping{'\n'}</Text>
+        {authenticated ? (
+            <>
+                <Text style={styles.title}>Scan <Text style={styles.colorful}>Code</Text> & <Text style={styles.colorful}>Checkout</Text>!</Text>
+                <Text style={styles.heading}>E-Invoice QR Code</Text>
+                <QRCode
+                    value={JSON.stringify(qrData)}
+                    size={250}
+                />
+                <View style={styles.notesContainer}>
+                    <Text style={styles.noteText}></Text>
+                    <Text style={styles.noteText}>Scan this code on cash counter to confirm {'\n'}your shopping{'\n'}</Text>
 
-            <Text style={styles.signatureText}>This QR Code is computer-generated and digitally verified.</Text>
-            <Text style={styles.noteText}><Text style={styles.boldText}>Developed by &copy; <Text style={styles.colorful}><Text style={styles.boldText}>Shopnpay</Text></Text> 2024</Text> </Text>
-        </View>
+                    <Text style={styles.signatureText}>This QR Code is computer-generated and digitally verified.</Text>
+                    <Text style={styles.noteText}><Text style={styles.boldText}>Developed by &copy; <Text style={styles.colorful}><Text style={styles.boldText}>Shopnpay</Text></Text> 2024</Text> </Text>
+                </View>
+            </>
+        ) : (
+            <Text style={styles.loadingText}>Authenticating...</Text>
+        )}
+
     </View>
 
     );
@@ -70,6 +117,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'black',
         fontFamily: 'Raleway-Regular',
+
     },
     signatureText: {
         fontSize: 12,

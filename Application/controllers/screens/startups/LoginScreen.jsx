@@ -70,6 +70,8 @@ const LoginPage = ({ navigation }) => {
       if (session) {
         // Session exists, navigate to main screen
         navigation.navigate('MainScreen');
+        setContact('');
+        setPassword('');
       }
     };
 

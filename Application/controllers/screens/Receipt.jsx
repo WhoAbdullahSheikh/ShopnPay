@@ -70,19 +70,25 @@ const Receipt = ({ cart, totalBill }) => {
         <View style={styles.itemsContainer}>
           {cart.map((item, index) => (
             <View key={index} style={styles.item}>
-              <Text style={styles.tableText}>{item.productName}</Text>
+              <Text style={styles.descriptionText}>{item.productName}</Text>
               <Text style={styles.tableText}>{item.quantity}</Text>
-              <Text style={styles.tableText}> {parseFloat(item.price).toFixed(2)}/-</Text>
-              <Text style={styles.tableText}> {(item.price * item.quantity).toFixed(2)}</Text>
+              <Text style={styles.tableText}>{parseFloat(item.price).toFixed(2)}/-</Text>
+              <Text style={styles.tableText}>{(item.price * item.quantity).toFixed(2)}</Text>
             </View>
           ))}
         </View>
         <View style={styles.tableHeader_top}></View>
         <Text style={styles.total}><Text style={styles.boldText}>Subtotal: </Text> Rs. {total.subtotal}/-</Text>
         <View style={styles.tableHeader_top}></View>
-        <View style={styles.servicesfeecontainer}>
-          <Text style={styles.fee}><Text style={styles.boldText}>FBR POS Service Free:       </Text> Rs. {total.posServiceFee}/-</Text>
-          <Text style={styles.fee}><Text style={styles.boldText}>Grand Total:       </Text> Rs. {total.grandTotal}/-</Text>
+        <View style={styles.servicesFeeContainer}>
+          <View style={styles.feeRow}>
+            <Text style={styles.feeLabel}><Text style={styles.boldText}>FBR POS Service Fee:</Text></Text>
+            <Text style={styles.feeValue}>Rs. {total.posServiceFee}/-</Text>
+          </View>
+          <View style={styles.feeRow}>
+            <Text style={styles.feeLabel}><Text style={styles.boldText}>Grand Total:</Text></Text>
+            <Text style={styles.feeValue}>Rs. {total.grandTotal}/-</Text>
+          </View>
         </View>
         <View style={styles.notesContainer}>
           <Text style={styles.noteText}></Text>
@@ -98,7 +104,7 @@ const Receipt = ({ cart, totalBill }) => {
             />
           </View>
           <Text style={styles.signatureText}>This receipt is computer-generated and digitally signed. No need of any signatures</Text>
-          <Text style={styles.noteText}><Text style={styles.boldText}>Developed by:</Text> &copy;Shopnpay 2024</Text>
+          <Text style={styles.noteText}><Text style={styles.boldText}>Developed by &copy; <Text style={styles.colorful}><Text style={styles.boldText}>Shopnpay</Text></Text> 2024</Text> </Text>
         </View>
         {/* Cut Paper Design at Bottom */}
       </View>
@@ -123,12 +129,12 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '100%',
-    height: 60,
+    height: 80,
     resizeMode: 'contain',
     marginBottom: 5,
   },
   title: {
-    marginBottom: 12,
+    marginBottom: 2,
   },
   title2: {
     fontSize: 23,
@@ -141,6 +147,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Raleway-Regular',
   },
+  colorful: {
+    color: '#A52A2A',
+},
   dateTimeContainer: {
     marginTop: 15,
     justifyContent: 'flex-end',
@@ -158,19 +167,22 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: 'grey',
   },
-  servicesfeecontainer: {
+  servicesFeeContainer: {
     marginTop: 15,
-    justifyContent: 'flex-end',
     marginBottom: 20,
   },
-  fee: {
-    fontSize: 14,
-    marginBottom: 5,
-    textAlign: 'right',
-    marginLeft: 10,
+  feeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  feeLabel: {
+    fontSize: 13,
     color: 'black',
   },
-
+  feeValue: {
+    fontSize: 13,
+    color: 'black',
+  },
   tableHeader_top: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -201,11 +213,17 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 12,
+  },
+  descriptionText: {
+    fontSize: 12,
+    flex: 1, // Give more space to the description
+    textAlign: 'left', // Left align the description
+    marginLeft: 5,
   },
   tableText: {
     fontSize: 12,
-    flex: 1,
+    flex: 1, 
     textAlign: 'center',
   },
   total: {
@@ -220,6 +238,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'center',
     color: 'grey',
+    fontFamily: 'Raleway-Regular',
   },
   signatureText: {
     fontSize: 12,

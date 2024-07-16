@@ -65,12 +65,7 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity
-          style={styles.drawerIconContainer}
-          >
-          <Icon name="bars" size={25} color="white" />
-        </TouchableOpacity>
-
+        
         <TextInput
           style={styles.searchBar}
           placeholder="Search Marts"

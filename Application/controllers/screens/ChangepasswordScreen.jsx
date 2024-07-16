@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 50,
+    marginTop: 10,
     justifyContent: 'center',
   },
   title: {
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+    fontFamily: 'Raleway-Bold',
   },
 });
 

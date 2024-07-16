@@ -1,7 +1,5 @@
-// PurchaseHistory.jsx
-
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PurchaseHistory = () => {
@@ -15,11 +13,40 @@ const PurchaseHistory = () => {
     try {
       const purchaseHistoryData = await AsyncStorage.getItem('@purchaseHistory');
       if (purchaseHistoryData !== null) {
-        setPurchaseHistory(JSON.parse(purchaseHistoryData));
+        const parsedData = JSON.parse(purchaseHistoryData);
+        console.log('Parsed Purchase History:', parsedData); // Debug log
+        setPurchaseHistory(parsedData);
+      } else {
+        console.log('No purchase history data found.');
       }
     } catch (error) {
       console.error('Error loading purchase history from AsyncStorage:', error);
     }
+  };
+
+  const deleteRecord = async (index) => {
+    Alert.alert(
+      "Delete Record",
+      "Are you sure you want to delete this record?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            try {
+              const updatedHistory = purchaseHistory.filter((_, i) => i !== index);
+              setPurchaseHistory(updatedHistory);
+              await AsyncStorage.setItem('@purchaseHistory', JSON.stringify(updatedHistory));
+            } catch (error) {
+              console.error('Error deleting record from AsyncStorage:', error);
+            }
+          }
+        }
+      ]
+    );
   };
 
   return (
@@ -31,11 +58,12 @@ const PurchaseHistory = () => {
         <FlatList
           data={purchaseHistory}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View style={styles.purchaseItem}>
-              <Text style={styles.itemText}>Total Bill: Rs. {item.totalBill}/-</Text>
-              <Text style={styles.itemText}>Date: {item.date}</Text>
-              <Text style={styles.itemText}>Time: {item.time}</Text>
+              <Text style={styles.itemText}><Text style={styles.boldText}>Total Bill:</Text> Rs. {item.totalBill}/-</Text>
+              <Text style={styles.itemText}><Text style={styles.boldText}>Date:</Text> {item.date}</Text>
+              <Text style={styles.itemText}><Text style={styles.boldText}>Time:</Text> {item.time}</Text>
+              <Button title="Delete" onPress={() => deleteRecord(index)} color="#FF0000" />
             </View>
           )}
         />
@@ -51,14 +79,20 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 0,
   },
+  boldText: {
+    fontWeight: 'bold',
+    fontFamily: 'Raleway-Regular',
+  },
   heading: {
     fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 10,
+    fontFamily: 'Raleway-Regular',
   },
   emptyText: {
     fontSize: 18,
     fontStyle: 'italic',
+    fontFamily: 'Raleway-Regular',
   },
   purchaseItem: {
     borderWidth: 1,
@@ -66,10 +100,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     borderRadius: 8,
+    
   },
   itemText: {
     fontSize: 16,
     marginBottom: 5,
+   
   },
 });
 

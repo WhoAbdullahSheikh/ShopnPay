@@ -12,12 +12,11 @@ import {
 } from 'react-native';
 import Icons from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/AntDesign';
-
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import jsonImage from '../../../pics/avatar.gif';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db } from '../../components/config';
 import TouchID from 'react-native-touch-id';
 
@@ -66,41 +65,89 @@ const AccInfo = () => {
       }
     };
     TouchID.isSupported(optionalConfigObject)
-    .then(biometryType => {
-      if (
-        biometryType === 'FaceID' ||
-        biometryType === 'TouchID' ||
-        biometryType === 'Biometrics'
-      ) {
-        TouchID.authenticate(
-          'To access your account information, please authenticate',
-          optionalConfigObject,
-        )
-          .then(success => {
-            setAuthenticated(true); // User authenticated
-          })
-          .catch(error => {
-            Alert.alert(
-              'Authentication Failed',
-              'You could not be authenticated. Try again or cancel.',
-              [
-                { text: 'Try Again', onPress: () => navigation.goBack() },
-                { text: 'Cancel', onPress: () => navigation.goBack() },
-              ],
-            );
-          });
-      }
-    })
-    .catch(error => {
-      // Failure scenario handling for not supported or other errors
-      Alert.alert(
-        'Authentication not supported',
-        'Your device does not support Face ID/Touch ID.',
-      );
-    });
+      .then(biometryType => {
+        if (
+          biometryType === 'FaceID' ||
+          biometryType === 'TouchID' ||
+          biometryType === 'Biometrics'
+        ) {
+          TouchID.authenticate(
+            'To access your account information, please authenticate',
+            optionalConfigObject,
+          )
+            .then(success => {
+              setAuthenticated(true); // User authenticated
+            })
+            .catch(error => {
+              Alert.alert(
+                'Authentication Failed',
+                'You could not be authenticated. Try again or cancel.',
+                [
+                  { text: 'Try Again', onPress: () => navigation.goBack() },
+                  { text: 'Cancel', onPress: () => navigation.goBack() },
+                ],
+              );
+            });
+        }
+      })
+      .catch(error => {
+        // Failure scenario handling for not supported or other errors
+        Alert.alert(
+          'Authentication not supported',
+          'Your device does not support Face ID/Touch ID.',
+        );
+      });
 
     loadSessionData();
   }, [navigation]);
+
+  const deleteAccount = async () => {
+    Alert.alert(
+      'Delete Account',
+      'Are you sure you want to delete your account? This action cannot be undone.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive', // Set style to 'destructive' for red color
+          onPress: async () => {
+            try {
+              const detailsRef = doc(db, 'customers', 'details');
+              const docSnapshot = await getDoc(detailsRef);
+
+              if (docSnapshot.exists()) {
+                const users = docSnapshot.data().RegisteredUser;
+                const userData = users.find(user => user.phoneNumber === phoneNumber);
+
+                if (userData) {
+                  await updateDoc(detailsRef, {
+                    RegisteredUser: arrayRemove(userData),
+                  });
+
+                  // Clear session data
+                  await AsyncStorage.removeItem('userSession');
+                  Alert.alert('Account Deleted', 'Your account has been deleted.');
+                  navigation.navigate('Login'); // Redirect to SignIn screen
+                  setContact('');
+
+                  setPassword('');
+                }
+              } else {
+                Alert.alert('Error', 'No user details found.');
+              }
+            } catch (error) {
+              console.error('Error deleting account:', error);
+              Alert.alert('Error', 'An error occurred while deleting your account.');
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
 
   if (loading) {
@@ -113,57 +160,65 @@ const AccInfo = () => {
   }
 
   return (
-
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      
-        <View style={styles.container}>
-          <TouchableOpacity style={[styles.cancelButton]} onPress={() => navigation.goBack()}>
-            <Icon2 name="close" size={30} color="black" />
-
-          </TouchableOpacity>
-          <View style={styles.profileContainer}>
-            <Image source={jsonImage} style={styles.profileImage} />
-            <Text style={styles.profileName}>{name}</Text>
-
-          </View>
-          <View style={styles.actionsContainer}>
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-              style={styles.input}
-              value={name}
-
-            />
-            <Text style={styles.label}>Phone</Text>
-            <TextInput
-              style={styles.input}
-              value={phoneNumber}
-
-            />
-
-
-            <TouchableOpacity
-              style={[styles.actionButton, styles.inputMargin]}
-              onPress={() => navigation.navigate('ChangePassword')}
-            >
-              <Icon name="lock-closed" size={24} color="white" />
-              <Text style={[styles.actionButtonText]}>Change Password</Text>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <Icon name="arrow-forward-circle" size={24} color="white" />
-              </View>
+      <View style={styles.container}>
+        {authenticated ? (
+          <>
+            <TouchableOpacity style={[styles.cancelButton]} onPress={() => navigation.goBack()}>
+              <Icon2 name="close" size={30} color="black" />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => navigation.navigate('purchaseHistory')}
-            >
-              <Icon name="lock-closed" size={24} color="white" />
-              <Text style={[styles.actionButtonText]}>Purchasing History</Text>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <Icon name="arrow-forward-circle" size={24} color="white" />
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      
+            <View style={styles.profileContainer}>
+              <Image source={jsonImage} style={styles.profileImage} />
+              <Text style={styles.profileName}>{name}</Text>
+            </View>
+            <View style={styles.actionsContainer}>
+              <Text style={styles.label}>Name</Text>
+              <TextInput
+                style={styles.input}
+                value={name}
+              />
+              <Text style={styles.label}>Phone</Text>
+              <TextInput
+                style={styles.input}
+                value={phoneNumber}
+              />
+              <TouchableOpacity
+                style={[styles.actionButton, styles.inputMargin]}
+                onPress={() => navigation.navigate('ChangePassword')}
+              >
+                <Icon name="lock-closed" size={24} color="white" />
+                <Text style={[styles.actionButtonText]}>Change Password</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <Icon name="arrow-forward-circle" size={24} color="white" />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => navigation.navigate('purchaseHistory')}
+              >
+                <Icon name="time" size={24} color="white" />
+                <Text style={[styles.actionButtonText]}>Purchasing History</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <Icon name="arrow-forward-circle" size={24} color="white" />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionButton]}
+                onPress={deleteAccount}
+              >
+                <Icon name="trash" size={24} color="white" />
+                <Text style={[styles.actionButtonText]}>Delete My Account</Text>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                  <Icon name="arrow-forward-circle" size={24} color="white" />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <Text style={styles.loadingText}>Authenticating...</Text>
+        )}
+
+      </View>
     </ScrollView>
   );
 };
@@ -188,7 +243,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway-Regular',
   },
   input: {
-
     borderWidth: 1,
     borderColor: '#A52A2A',
     padding: 10,
@@ -207,7 +261,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   profileName: {
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 5,
     color: 'black',
@@ -223,7 +277,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     width: '100%',
-
   },
   actionsContainer: {
     width: '100%',
@@ -244,6 +297,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Raleway-Regular',
   },
+  deleteButton: {
+    backgroundColor: '#FF0000',
+  },
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
@@ -253,8 +309,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'gray',
     marginTop: 10,
-  }
-  ,
+  },
   inputMargin: {
     marginTop: 30,
   },

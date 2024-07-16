@@ -27,6 +27,8 @@ import NotificationSettings from './controllers/screens/navigations/Notification
 import ChangePasswordScreen from './controllers/screens/ChangepasswordScreen';
 import QRCodeScreen from './controllers/screens/QRCodeScreen';
 import Purchasehistory from './controllers/screens/PurchaseHistory';
+import ForgotPasswordPage from './controllers/screens/ForgotPasswordPage';
+
 const Stack = createStackNavigator();
 
 const greyTheme = {
@@ -57,7 +59,7 @@ const HeaderWithImage = () => {
 const StackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="MainScreen"
+      initialRouteName="Splash"
       screenOptions={{
         headerShown: false,
         headerStyle: {
@@ -128,6 +130,7 @@ const StackScreen = () => {
         component={AccInfo}
         options={{
           headerLeft: () => null,
+          gestureEnabled: false,
         }}
       />
       <Stack.Screen
@@ -162,12 +165,30 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
-      <Stack.Screen
-        name="ChangePassword"
-        component={ChangePasswordScreen}
+       <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPasswordPage}
         options={{
           headerLeft: () => null,
         }}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: () => <HeaderWithImage />,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon
+                name="arrow-back"
+                size={25}
+                color={greyTheme.textColor}
+                style={{marginLeft: 15}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
       />
       <Stack.Screen
         name="purchaseHistory"

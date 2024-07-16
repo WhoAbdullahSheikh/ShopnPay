@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from "../../src/Color";
 import Receipt from './Receipt';
 import { useNavigation } from '@react-navigation/native';
+import LottieView from 'lottie-react-native'; // Import LottieView
 
 const Cart = ({ route }) => {
   const { scannedProduct } = route.params || {};
@@ -106,13 +107,18 @@ const Cart = ({ route }) => {
   };
 
   const handleConfirmReceipt = async () => {
+    if (cart.length === 0) {
+      Alert.alert('Cart is empty', 'Please add some items to the cart before confirming.');
+      return;
+    }
+
     const qrData = {
       cart,
       totalBill,
       date: new Date().toLocaleDateString(),
       time: new Date().toLocaleTimeString()
     };
-  
+
     // Save to purchase history
     try {
       const purchaseHistoryData = await AsyncStorage.getItem('@purchaseHistory');
@@ -125,16 +131,16 @@ const Cart = ({ route }) => {
     } catch (error) {
       console.error('Error saving purchase history to AsyncStorage:', error);
     }
-  
+
     // Clear cart
     setCart([]);
     setTotalBill(0);
-  
+
     // Navigate to QR code screen
     navigation.navigate('qrcode', { qrData });
     handleCloseReceipt(); // Close the modal
   };
-  
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -148,29 +154,43 @@ const Cart = ({ route }) => {
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <Text style={styles.heading}>Cart</Text>
       <View style={styles.tableHeader_bottom}></View>
-      <FlatList
-        data={cart}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={styles.cartItem}>
-            <View style={styles.productInfo}>
-              <TouchableOpacity onPress={() => handleDecreaseQuantity(index)}>
-                <Text style={styles.quantityButton}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.productName}>{item.productName}</Text>
-              <TouchableOpacity onPress={() => handleIncreaseQuantity(index)}>
-                <Text style={styles.quantityButton}>+</Text>
-              </TouchableOpacity>
+
+      {cart.length === 0 ? (
+        <View style={styles.emptyCartContainer}>
+
+          <LottieView
+            style={styles.animationjson}
+            source={require('../../pics/animations/notfound.json')}
+            autoPlay
+            loop={true}
+          />
+
+        </View>
+      ) : (
+        <FlatList
+          data={cart}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <View style={styles.cartItem}>
+              <View style={styles.productInfo}>
+                <TouchableOpacity onPress={() => handleDecreaseQuantity(index)}>
+                  <Text style={styles.quantityButton}>-</Text>
+                </TouchableOpacity>
+                <Text style={styles.productName}>{item.productName}</Text>
+                <TouchableOpacity onPress={() => handleIncreaseQuantity(index)}>
+                  <Text style={styles.quantityButton}>+</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.priceAndDelete}>
+                <Text style={styles.price}>Rs. {item.price * item.quantity}</Text>
+                <TouchableOpacity onPress={() => handleRemoveItem(index)}>
+                  <Icon name="delete" size={24} color="red" />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.priceAndDelete}>
-              <Text style={styles.price}>Rs. {item.price * item.quantity}</Text>
-              <TouchableOpacity onPress={() => handleRemoveItem(index)}>
-                <Icon name="delete" size={24} color="red" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      )}
       <Text style={styles.totalBill}><Text style={styles.boldText}>Total Bill: </Text>Rs. {totalBill}/-</Text>
       <TouchableOpacity style={styles.generateReceiptButton} onPress={handleGenerateReceipt}>
         <Text style={styles.buttonText}>Generate Receipt</Text>
@@ -228,6 +248,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  emptyCartContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  animationjson: {
+    width: 250,
+    height: 250,
+  },
+  emptyCartText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: 'gray',
+    marginTop: 20,
+  },
   cartItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -259,11 +294,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'green',
   },
-  deleteButton: {
-    fontSize: 20,
-    color: 'red',
-    marginLeft: 10,
-  },
   generateReceiptButton: {
     backgroundColor: '#A52A2A',
     padding: 12,
@@ -273,7 +303,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'Raleway-Bold',
   },
   totalBill: {
@@ -311,7 +341,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   confirmButton: {
@@ -324,12 +354,12 @@ const styles = StyleSheet.create({
   },
   confirmButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     width: '100%',
     marginTop: 10,
   },

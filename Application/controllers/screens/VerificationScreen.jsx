@@ -15,7 +15,7 @@ const VerificationScreen = ({navigation}) => {
       <Text style={styles.verifyheading}>Successfully</Text>
       <Text style={styles.message}>Your Account has been Created!</Text>
 
-      <TouchableOpacity style={styles.optionButton} onPress={() => navigation.navigate('MainScreen')}>
+      <TouchableOpacity style={styles.optionButton} onPress={() => navigation.navigate('Login')}>
         <Text style={styles.optionText} >Let's Get Started</Text>
         <View style={{flex: 1, alignItems: 'flex-end'}}>
           <Icon name="arrow-forward" size={24} color="white" />
