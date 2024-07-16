@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from "../../src/Color";
 import Receipt from './Receipt';
@@ -15,10 +16,40 @@ const Cart = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Load cart from AsyncStorage on component mount
+    loadCartFromStorage();
+  }, []);
+
+  useEffect(() => {
     if (scannedProduct && !isProductInCart(scannedProduct)) {
       addProductToCart(scannedProduct);
     }
   }, [scannedProduct]);
+
+  useEffect(() => {
+    // Save cart to AsyncStorage whenever it changes
+    saveCartToStorage();
+  }, [cart]);
+
+  const loadCartFromStorage = async () => {
+    try {
+      const cartData = await AsyncStorage.getItem('@cart');
+      if (cartData !== null) {
+        setCart(JSON.parse(cartData));
+        setTotalBill(calculateTotalBill(JSON.parse(cartData)));
+      }
+    } catch (error) {
+      console.error('Error loading cart from AsyncStorage:', error);
+    }
+  };
+
+  const saveCartToStorage = async () => {
+    try {
+      await AsyncStorage.setItem('@cart', JSON.stringify(cart));
+    } catch (error) {
+      console.error('Error saving cart to AsyncStorage:', error);
+    }
+  };
 
   const isProductInCart = (product) => {
     return cart.some(item => item.productName === product.description);
@@ -37,7 +68,6 @@ const Cart = ({ route }) => {
 
   const handleGenerateReceipt = () => {
     setShowReceipt(true);
-    
   };
 
   const handleCloseReceipt = () => {
@@ -303,6 +333,5 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 });
-
 
 export default Cart;

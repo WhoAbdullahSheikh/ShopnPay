@@ -57,7 +57,7 @@ const HeaderWithImage = () => {
 const StackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="barcode"
+      initialRouteName="MainScreen"
       screenOptions={{
         headerShown: false,
         headerStyle: {
