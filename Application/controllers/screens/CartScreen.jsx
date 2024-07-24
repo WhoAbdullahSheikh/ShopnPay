@@ -53,10 +53,16 @@ const Cart = ({ route }) => {
   };
 
   const isProductInCart = (product) => {
+
     return cart.some(item => item.productName === product.description);
+
   };
 
   const addProductToCart = (product) => {
+    if (isProductInCart(product)) {
+      Alert.alert('Product Already in Cart', 'This product is already in your cart.');
+      return;
+    }
     const newCartItem = {
       productName: product.description,
       price: product.price,

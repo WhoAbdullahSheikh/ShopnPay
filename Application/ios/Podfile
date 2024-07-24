@@ -51,7 +51,7 @@ target 'Application' do
         config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
       end
     end
-    
+
     # Flipper-specific post-install actions
     react_native_post_install(
       installer,

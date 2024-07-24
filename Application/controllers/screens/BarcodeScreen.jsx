@@ -4,7 +4,7 @@ import { RNCamera } from 'react-native-camera';
 import BarcodeMask from 'react-native-barcode-mask';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation, useIsFocused } from '@react-navigation/native'; // Update import
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../components/config';
 import Cart from './CartScreen';
@@ -20,16 +20,14 @@ const BarcodeScannerScreen = ({ navigation }) => {
   const [scannedProduct, setScannedProduct] = useState(null);
   const [barcodeMaskWidth, setBarcodeMaskWidth] = useState('80%');
   const [barcodeMaskHeight, setBarcodeMaskHeight] = useState('80%');
-  const isFocused = useIsFocused(); // Hook to check if screen is focused
+  const isFocused = useIsFocused();
 
   const handleBarcodeScan = async ({ data }) => {
-    if (scannedBarcode) {
-      return; // Prevent further scanning if a barcode has already been scanned
-    }
+    if (scannedBarcode) return;
 
     try {
       console.log(`Scanning barcode: ${data}`);
-      setScannedBarcode(data); // Set scannedBarcode immediately
+      setScannedBarcode(data);
 
       const querySnapshot = await getDocs(collection(db, 'outlets'));
       let foundProduct = null;
@@ -49,15 +47,18 @@ const BarcodeScannerScreen = ({ navigation }) => {
         setIsConfirmationModalVisible(true);
       } else {
         Alert.alert('Attention', 'Product not found');
-        setScannedBarcode(null); // Reset scannedBarcode if product not found
-        setIsCameraOpen(false); // Close the camera after product not found
+        resetCamera();
       }
     } catch (error) {
       console.error('Error fetching items:', error);
       Alert.alert('Error fetching items. Please try again.');
-      setScannedBarcode(null); // Reset scannedBarcode in case of an error
-      setIsCameraOpen(false); // Close the camera after error
+      resetCamera();
     }
+  };
+
+  const resetCamera = () => {
+    setScannedBarcode(null);
+    setIsCameraOpen(false);
   };
 
   const handleScanButtonPress = () => {
@@ -74,20 +75,16 @@ const BarcodeScannerScreen = ({ navigation }) => {
   const handleAddToCart = () => {
     navigation.navigate('Cart', { scannedProduct });
     setIsConfirmationModalVisible(false);
-    setScannedBarcode(null);
-    setIsCameraOpen(false);
+    resetCamera();
   };
 
   const handleCancelScan = () => {
     setIsConfirmationModalVisible(false);
-    setScannedBarcode(null);
-    setIsCameraOpen(false); // Close the camera when scan is canceled
+    resetCamera();
   };
 
   const updateBarcodeMaskSize = () => {
-    // Get dimensions of the screen
     const { width, height } = Dimensions.get('window');
-    // Set the BarcodeMask size to 50% of the screen dimensions
     setBarcodeMaskWidth(width * 0.9);
     setBarcodeMaskHeight(height * 0.28);
   };
@@ -98,17 +95,9 @@ const BarcodeScannerScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (isFocused) {
-      // Open the camera when the screen is focused
       setIsCameraOpen(true);
     } else {
-      // Close the camera when leaving the screen
-      setIsCameraOpen(false);
-      setIsFlashOn(false);
-      setScannedBarcode(null);
-      // Ensure camera is stopped when leaving the screen
-      if (cameraRef.current) {
-        cameraRef.current.pausePreview();
-      }
+      resetCamera();
     }
   }, [isFocused]);
 
@@ -132,12 +121,9 @@ const BarcodeScannerScreen = ({ navigation }) => {
           type={RNCamera.Constants.Type.back}
           onBarCodeRead={handleBarcodeScan}
           captureAudio={false}
-          flashMode={
-            isFlashOn
-              ? RNCamera.Constants.FlashMode.torch
-              : RNCamera.Constants.FlashMode.off
-          }
-          autoFocus={RNCamera.Constants.AutoFocus.on}>
+          flashMode={isFlashOn ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off}
+          autoFocus={RNCamera.Constants.AutoFocus.on}
+        >
           <BarcodeMask
             width={barcodeMaskWidth}
             height={barcodeMaskHeight}
@@ -150,9 +136,7 @@ const BarcodeScannerScreen = ({ navigation }) => {
       )}
 
       <View style={styles.instructionsContainer}>
-        <Text style={styles.instructions}>
-          * Place the product a little far from the camera *
-        </Text>
+        <Text style={styles.instructions}>* Place the product a little far from the camera *</Text>
       </View>
 
       {isConfirmationModalVisible && (
@@ -160,12 +144,11 @@ const BarcodeScannerScreen = ({ navigation }) => {
           animationType="slide"
           transparent={true}
           visible={isConfirmationModalVisible}
-          onRequestClose={() => setIsConfirmationModalVisible(false)}>
+          onRequestClose={() => setIsConfirmationModalVisible(false)}
+        >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-              <Text style={styles.resultText}>
-                Scanned Barcode: {scannedBarcode}
-              </Text>
+              <Text style={styles.resultText}>Scanned Barcode: {scannedBarcode}</Text>
               <TouchableOpacity style={styles.modalButton} onPress={handleAddToCart}>
                 <Text style={styles.buttonText}>Add to Cart</Text>
               </TouchableOpacity>
@@ -233,21 +216,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  resultContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  resultText: {
-    color: 'black',
-    fontSize: 20,
-    marginBottom: 20,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -280,7 +248,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
 const BarcodeScanner = () => {
   const navigation = useNavigation();
   const greyTheme = {
