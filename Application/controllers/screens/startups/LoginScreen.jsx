@@ -14,15 +14,15 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../components/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import auth from '@react-native-firebase/auth';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const LoginPage = ({ navigation }) => {
+const LoginScreen = ({ navigation }) => {
   const [contact, setContact] = useState('');
   const [countryCode, setCountryCode] = useState('+92');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleContactChange = (inputText) => {
     const numericInput = inputText.replace(/[^0-9]/g, '');
@@ -53,7 +53,6 @@ const LoginPage = ({ navigation }) => {
 
     const userExists = await checkUserExists(phoneNumber, password);
     if (userExists) {
-      // Save session data
       await AsyncStorage.setItem('userSession', JSON.stringify({ phoneNumber }));
 
       Alert.alert('Login Successful', 'You are logged in successfully');
@@ -68,7 +67,6 @@ const LoginPage = ({ navigation }) => {
     const checkSession = async () => {
       const session = await AsyncStorage.getItem('userSession');
       if (session) {
-        // Session exists, navigate to main screen
         navigation.navigate('MainScreen');
         setContact('');
         setPassword('');
@@ -102,12 +100,12 @@ const LoginPage = ({ navigation }) => {
           />
         </View>
         {showPasswordFields && (
-          <>
+          <View style={styles.passwordContainer}>
             <TextInput
               value={password}
               onChangeText={setPassword}
               placeholder="Enter password"
-              secureTextEntry={true}
+              secureTextEntry={!showPassword}
               placeholderTextColor="#888"
               style={[
                 styles.pass_input,
@@ -116,7 +114,10 @@ const LoginPage = ({ navigation }) => {
               onFocus={() => setFocusedInput('password')}
               onBlur={() => setFocusedInput(null)}
             />
-          </>
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Icon name={showPassword ? 'visibility' : 'visibility-off'} size={20} color="black" style={styles.icon} />
+            </TouchableOpacity>
+          </View>
         )}
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -156,22 +157,29 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   countryCodeBox: {
-    backgroundColor: '#eee',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
     marginRight: 10,
-    borderRadius: 10,
+    borderRadius: 10, // Increased border radius for a softer look
     borderColor: 'black',
-    borderWidth: 1,
     height: 45,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5, // Android shadow
   },
   countryCodeText: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   input: {
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: 'black',
     width: '60%',
     marginBottom: 10,
@@ -179,9 +187,17 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 10,
     fontSize: 15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   pass_input: {
-    borderWidth: 1,
     borderColor: 'black',
     width: 300,
     marginBottom: 10,
@@ -189,6 +205,15 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 10,
     fontSize: 15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   focusedInput: {
     borderColor: '#A52A2A',
@@ -230,6 +255,16 @@ const styles = StyleSheet.create({
     color: '#A52A2A',
     fontWeight: 'bold',
   },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  icon: {
+    position: 'absolute',
+    right: 10,
+    top: -15,
+  },
 });
 
-export default LoginPage;
+export default LoginScreen;

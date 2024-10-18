@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from "../../src/Color";
 import Receipt from './Receipt';
 import { useNavigation } from '@react-navigation/native';
-import LottieView from 'lottie-react-native'; // Import LottieView
+import LottieView from 'lottie-react-native'; 
 
 const Cart = ({ route }) => {
   const { scannedProduct } = route.params || {};
@@ -17,7 +17,7 @@ const Cart = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Load cart from AsyncStorage on component mount
+    
     loadCartFromStorage();
   }, []);
 
@@ -28,7 +28,7 @@ const Cart = ({ route }) => {
   }, [scannedProduct]);
 
   useEffect(() => {
-    // Save cart to AsyncStorage whenever it changes
+    
     saveCartToStorage();
   }, [cart]);
 
@@ -125,7 +125,7 @@ const Cart = ({ route }) => {
       time: new Date().toLocaleTimeString()
     };
 
-    // Save to purchase history
+    
     try {
       const purchaseHistoryData = await AsyncStorage.getItem('@purchaseHistory');
       let purchaseHistory = [];
@@ -138,13 +138,13 @@ const Cart = ({ route }) => {
       console.error('Error saving purchase history to AsyncStorage:', error);
     }
 
-    // Clear cart
+    
     setCart([]);
     setTotalBill(0);
 
-    // Navigate to QR code screen
+    
     navigation.navigate('qrcode', { qrData });
-    handleCloseReceipt(); // Close the modal
+    handleCloseReceipt(); 
   };
 
   if (loading) {

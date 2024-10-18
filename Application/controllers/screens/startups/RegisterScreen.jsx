@@ -1,8 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  Button,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -15,11 +14,12 @@ import {
   getDoc,
   arrayUnion,
 } from 'firebase/firestore';
-import {db} from '../../components/config';
+import { db } from '../../components/config';
 import auth from '@react-native-firebase/auth';
 import LottieView from 'lottie-react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const RegisterPage = ({navigation}) => {
+const RegisterPage = ({ navigation }) => {
   const [contact, setContact] = useState('');
   const [countryCode, setCountryCode] = useState('+92');
   const [confirm, setConfirm] = useState(null);
@@ -27,6 +27,7 @@ const RegisterPage = ({navigation}) => {
   const [verificationText, setVerificationText] = useState('');
   const [incorrectCode, setIncorrectCode] = useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -181,32 +182,42 @@ const RegisterPage = ({navigation}) => {
                 onFocus={() => setFocusedInput('name')}
                 onBlur={() => setFocusedInput(null)}
               />
-              <TextInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Enter password"
-                secureTextEntry={true}
-                placeholderTextColor="#888"
-                style={[
-                  styles.pass_input,
-                  focusedInput === 'password' ? styles.focusedInput : null,
-                ]}
-                onFocus={() => setFocusedInput('password')}
-                onBlur={() => setFocusedInput(null)}
-              />
-              <TextInput
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                placeholder="Confirm password"
-                secureTextEntry={true}
-                placeholderTextColor="#888"
-                style={[
-                  styles.pass_input,
-                  focusedInput === 'confirmPassword' ? styles.focusedInput : null,
-                ]}
-                onFocus={() => setFocusedInput('confirmPassword')}
-                onBlur={() => setFocusedInput(null)}
-              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Enter password"
+                  secureTextEntry={!showPassword}
+                  placeholderTextColor="#888"
+                  style={[
+                    styles.pass_input,
+                    focusedInput === 'password' ? styles.focusedInput : null,
+                  ]}
+                  onFocus={() => setFocusedInput('password')}
+                  onBlur={() => setFocusedInput(null)}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Icon name={showPassword ? 'visibility' : 'visibility-off'} size={20} color="black" style={styles.icon} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  placeholder="Confirm password"
+                  secureTextEntry={!showPassword}
+                  placeholderTextColor="#888"
+                  style={[
+                    styles.pass_input,
+                    focusedInput === 'confirmPassword' ? styles.focusedInput : null,
+                  ]}
+                  onFocus={() => setFocusedInput('confirmPassword')}
+                  onBlur={() => setFocusedInput(null)}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Icon name={showPassword ? 'visibility' : 'visibility-off'} size={20} color="black" style={styles.icon} />
+                </TouchableOpacity>
+              </View>
             </>
           )}
 
@@ -337,13 +348,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 5,
   },
-  backgroundImage: {
-    flex: 1,
-    width: '100%',
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    opacity: 0.7,
-  },
   title: {
     fontSize: 35,
     marginBottom: 40,
@@ -360,47 +364,75 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     marginRight: 10,
-    borderRadius: 10,
+    borderRadius: 15,
     borderColor: 'black',
-    borderWidth: 1,
     height: 45,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   countryCodeText: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   input: {
-    borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#A52A2A',
     width: 240,
     marginBottom: 10,
     padding: 10,
     height: 45,
-    borderRadius: 10,
-    fontSize: 15,
-    
-    
+    borderRadius: 15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   pass_input: {
-    borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#A52A2A',
     width: 300,
     marginBottom: 10,
     padding: 10,
     height: 45,
-    borderRadius: 10,
-    fontSize: 15,
-    
+    borderRadius: 15,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 300,
+    marginBottom: 10,
+  },
+  icon: {
+    marginLeft: -30,
+    bottom: 5,
   },
   focusedInput: {
-    borderColor: '#A52A2A', // A deep red color for the border
+    borderColor: '#A52A2A',
     borderWidth: 2,
-    backgroundColor: '#fff', // Optional: can adjust the background color for contrast
-    shadowColor: '#A52A2A', // Use the same color as the border for the glow effect
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.6, // Adjust opacity for more or less glow
-    shadowRadius: 10, // Spread of the glow
-    elevation: 15, // Android shadow
+    backgroundColor: '#fff',
+    shadowColor: '#A52A2A',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 10,
+    elevation: 15,
   },
   button: {
     width: 300,

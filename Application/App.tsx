@@ -59,7 +59,7 @@ const HeaderWithImage = () => {
 const StackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Splash"
+      initialRouteName="Login"
       screenOptions={{
         headerShown: false,
         headerStyle: {
