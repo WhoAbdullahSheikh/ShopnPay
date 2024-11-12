@@ -28,6 +28,7 @@ import ChangePasswordScreen from './controllers/screens/ChangepasswordScreen';
 import QRCodeScreen from './controllers/screens/QRCodeScreen';
 import Purchasehistory from './controllers/screens/PurchaseHistory';
 import ForgotPasswordPage from './controllers/screens/ForgotPasswordPage';
+import TransactionDetails from './controllers/screens/navigations/TransactionDetails';
 
 const Stack = createStackNavigator();
 
@@ -81,6 +82,13 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
+       <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          headerLeft: () => null,
+        }}
+      />
       <Stack.Screen
         name="Login"
         component={LoginScreen}
@@ -102,13 +110,6 @@ const StackScreen = () => {
         options={{
           headerLeft: () => null,
           gestureEnabled: false,
-        }}
-      />
-      <Stack.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{
-          headerLeft: () => null,
         }}
       />
       <Stack.Screen
@@ -211,6 +212,24 @@ const StackScreen = () => {
       <Stack.Screen
         name="qrcode"
         component={QRCodeScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: () => <HeaderWithImage />,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon
+                name="arrow-back"
+                size={25}
+                color={greyTheme.textColor}
+                style={{marginLeft: 15}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+       <Stack.Screen
+        name="TransactionDetails"
+        component={TransactionDetails}
         options={({navigation}) => ({
           headerShown: true,
           headerTitle: () => <HeaderWithImage />,

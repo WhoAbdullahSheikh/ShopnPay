@@ -64,6 +64,7 @@ const AccInfo = () => {
         Alert.alert('No user details found', 'User details collection is empty.');
       }
     };
+    /*
     TouchID.isSupported(optionalConfigObject)
       .then(biometryType => {
         if (
@@ -97,6 +98,8 @@ const AccInfo = () => {
           'Your device does not support Face ID/Touch ID.',
         );
       });
+      */
+      setAuthenticated(true); 
 
     loadSessionData();
   }, [navigation]);
@@ -112,7 +115,7 @@ const AccInfo = () => {
         },
         {
           text: 'Delete',
-          style: 'destructive', // Set style to 'destructive' for red color
+          style: 'destructive', 
           onPress: async () => {
             try {
               const detailsRef = doc(db, 'customers', 'details');

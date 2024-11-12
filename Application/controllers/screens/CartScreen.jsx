@@ -6,6 +6,8 @@ import Colors from "../../src/Color";
 import Receipt from './Receipt';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native'; 
+import { db } from '../components/config'; // Import Firestore config
+import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 
 const Cart = ({ route }) => {
   const { scannedProduct } = route.params || {};
@@ -17,7 +19,6 @@ const Cart = ({ route }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    
     loadCartFromStorage();
   }, []);
 
@@ -28,7 +29,6 @@ const Cart = ({ route }) => {
   }, [scannedProduct]);
 
   useEffect(() => {
-    
     saveCartToStorage();
   }, [cart]);
 
@@ -53,9 +53,7 @@ const Cart = ({ route }) => {
   };
 
   const isProductInCart = (product) => {
-
     return cart.some(item => item.productName === product.description);
-
   };
 
   const addProductToCart = (product) => {
@@ -113,40 +111,58 @@ const Cart = ({ route }) => {
   };
 
   const handleConfirmReceipt = async () => {
-    if (cart.length === 0) {
-      Alert.alert('Cart is empty', 'Please add some items to the cart before confirming.');
-      return;
-    }
+  if (cart.length === 0) {
+    Alert.alert('Cart is empty', 'Please add some items to the cart before confirming.');
+    return;
+  }
 
-    const qrData = {
-      cart,
-      totalBill,
-      date: new Date().toLocaleDateString(),
-      time: new Date().toLocaleTimeString()
-    };
-
-    
-    try {
-      const purchaseHistoryData = await AsyncStorage.getItem('@purchaseHistory');
-      let purchaseHistory = [];
-      if (purchaseHistoryData !== null) {
-        purchaseHistory = JSON.parse(purchaseHistoryData);
-      }
-      purchaseHistory.push(qrData);
-      await AsyncStorage.setItem('@purchaseHistory', JSON.stringify(purchaseHistory));
-    } catch (error) {
-      console.error('Error saving purchase history to AsyncStorage:', error);
-    }
-
-    
-    setCart([]);
-    setTotalBill(0);
-
-    
-    navigation.navigate('qrcode', { qrData });
-    handleCloseReceipt(); 
+  const qrData = {
+    cart,
+    totalBill,
+    date: new Date().toLocaleDateString(),
+    time: new Date().toLocaleTimeString()
   };
 
+  // Retrieve the phone number from session
+  try {
+    const sessionData = await AsyncStorage.getItem('userSession');
+    if (sessionData) {
+      const userSession = JSON.parse(sessionData);
+      const phoneNumber = userSession.phoneNumber;
+
+      // Reference to the user's document in the 'customers' collection
+      const userRef = doc(db, 'purchaseHistory', phoneNumber); // Using phone number as document ID
+      const docSnapshot = await getDoc(userRef);
+
+      if (docSnapshot.exists()) {
+        // If user exists, append the new purchase to the existing purchaseHistory
+        const existingHistory = docSnapshot.data().purchaseHistory || [];
+        await setDoc(userRef, {
+          purchaseHistory: [...existingHistory, qrData],
+        }, { merge: true });  // Merge to keep existing data intact
+      } else {
+        // If user doesn't exist, create a new document with purchaseHistory
+        await setDoc(userRef, {
+          purchaseHistory: [qrData],
+        });
+      }
+
+      // Clear cart and reset state
+      setCart([]);
+      setTotalBill(0);
+
+      // Navigate to QR code screen with purchase data
+      navigation.navigate('qrcode', { qrData });
+
+      handleCloseReceipt(); 
+    } else {
+      Alert.alert('User not found', 'Please log in to confirm the purchase.');
+    }
+  } catch (error) {
+    console.error('Error saving purchase history:', error);
+    Alert.alert('Error', 'An error occurred while saving your purchase history.');
+  }
+};
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -163,14 +179,12 @@ const Cart = ({ route }) => {
 
       {cart.length === 0 ? (
         <View style={styles.emptyCartContainer}>
-
           <LottieView
             style={styles.animationjson}
             source={require('../../pics/animations/notfound.json')}
             autoPlay
             loop={true}
           />
-
         </View>
       ) : (
         <FlatList
@@ -225,6 +239,7 @@ const Cart = ({ route }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   loadingContainer: {

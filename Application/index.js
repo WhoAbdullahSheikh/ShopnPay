@@ -9,3 +9,4 @@ const ignoreWarnings = ['Sending `onAnimatedValueUpdate` with no listeners regis
 LogBox.ignoreLogs(ignoreWarnings);
 
 AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(appName.toLowerCase(), () => App);
