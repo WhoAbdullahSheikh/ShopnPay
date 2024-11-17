@@ -42,3 +42,18 @@
           'Your device does not support Face ID/Touch ID.',
         );
       });
+
+
+----------------------------------------------------------------
+----------------------------------------------------------------
+
+     {authenticated && (
+       <>
+            <TouchableOpacity style={[styles.cancelButton]} onPress={() => navigation.goBack()}>
+              <Icon2 name="close" size={30} color="black" />
+            </TouchableOpacity>
+
+              </TouchableOpacity>
+            </View>
+          </>
+        )}

@@ -18,7 +18,7 @@ import jsonImage from '../../../pics/avatar.gif';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db } from '../../components/config';
-import TouchID from 'react-native-touch-id';
+// import TouchID from 'react-native-touch-id'; // Comment out this import
 
 const AccInfo = () => {
   const navigation = useNavigation();
@@ -32,6 +32,7 @@ const AccInfo = () => {
       unifiedErrors: false,
       passcodeFallback: false,
     };
+
     const loadSessionData = async () => {
       try {
         const session = await AsyncStorage.getItem('userSession');
@@ -64,42 +65,44 @@ const AccInfo = () => {
         Alert.alert('No user details found', 'User details collection is empty.');
       }
     };
-    /*
-    TouchID.isSupported(optionalConfigObject)
-      .then(biometryType => {
-        if (
-          biometryType === 'FaceID' ||
-          biometryType === 'TouchID' ||
-          biometryType === 'Biometrics'
-        ) {
-          TouchID.authenticate(
-            'To access your account information, please authenticate',
-            optionalConfigObject,
-          )
-            .then(success => {
-              setAuthenticated(true); // User authenticated
-            })
-            .catch(error => {
-              Alert.alert(
-                'Authentication Failed',
-                'You could not be authenticated. Try again or cancel.',
-                [
-                  { text: 'Try Again', onPress: () => navigation.goBack() },
-                  { text: 'Cancel', onPress: () => navigation.goBack() },
-                ],
-              );
-            });
-        }
-      })
-      .catch(error => {
-        // Failure scenario handling for not supported or other errors
-        Alert.alert(
-          'Authentication not supported',
-          'Your device does not support Face ID/Touch ID.',
-        );
-      });
-      */
-      setAuthenticated(true); 
+
+    // Commenting out the TouchID authentication logic for testing
+    // TouchID.isSupported(optionalConfigObject)
+    //   .then(biometryType => {
+    //     if (
+    //       biometryType === 'FaceID' ||
+    //       biometryType === 'TouchID' ||
+    //       biometryType === 'Biometrics'
+    //     ) {
+    //       TouchID.authenticate(
+    //         'To access your account information, please authenticate',
+    //         optionalConfigObject
+    //       )
+    //         .then(success => {
+    //           setAuthenticated(true); // User authenticated
+    //         })
+    //         .catch(error => {
+    //           Alert.alert(
+    //             'Authentication Failed',
+    //             'You could not be authenticated. Try again or cancel.',
+    //             [
+    //               { text: 'Try Again', onPress: () => navigation.goBack() },
+    //               { text: 'Cancel', onPress: () => navigation.goBack() },
+    //             ]
+    //           );
+    //           setAuthenticated(false); // Authentication failed
+    //         });
+    //     }
+    //   })
+    //   .catch(error => {
+    //     // Failure scenario handling for not supported or other errors
+    //     Alert.alert(
+    //       'Authentication not supported',
+    //       'Your device does not support Face ID/Touch ID.',
+    //       [{ text: 'OK', onPress: () => navigation.goBack() }]
+    //     );
+    //     setAuthenticated(false); // Not supported
+    //   });
 
     loadSessionData();
   }, [navigation]);
@@ -115,7 +118,7 @@ const AccInfo = () => {
         },
         {
           text: 'Delete',
-          style: 'destructive', 
+          style: 'destructive',
           onPress: async () => {
             try {
               const detailsRef = doc(db, 'customers', 'details');
@@ -134,9 +137,6 @@ const AccInfo = () => {
                   await AsyncStorage.removeItem('userSession');
                   Alert.alert('Account Deleted', 'Your account has been deleted.');
                   navigation.navigate('Login'); // Redirect to SignIn screen
-                  setContact('');
-
-                  setPassword('');
                 }
               } else {
                 Alert.alert('Error', 'No user details found.');
@@ -152,8 +152,7 @@ const AccInfo = () => {
     );
   };
 
-
-  if (loading) {
+ /* if (loading || !authenticated) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#A52A2A" />
@@ -161,11 +160,12 @@ const AccInfo = () => {
       </View>
     );
   }
+  */
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.container}>
-        {authenticated ? (
+ 
           <>
             <TouchableOpacity style={[styles.cancelButton]} onPress={() => navigation.goBack()}>
               <Icon2 name="close" size={30} color="black" />
@@ -179,11 +179,13 @@ const AccInfo = () => {
               <TextInput
                 style={styles.input}
                 value={name}
+                editable={false}
               />
               <Text style={styles.label}>Phone</Text>
               <TextInput
                 style={styles.input}
                 value={phoneNumber}
+                editable={false}
               />
               <TouchableOpacity
                 style={[styles.actionButton, styles.inputMargin]}
@@ -217,9 +219,6 @@ const AccInfo = () => {
               </TouchableOpacity>
             </View>
           </>
-        ) : (
-          <Text style={styles.loadingText}>Authenticating...</Text>
-        )}
 
       </View>
     </ScrollView>

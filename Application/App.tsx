@@ -29,7 +29,7 @@ import QRCodeScreen from './controllers/screens/QRCodeScreen';
 import Purchasehistory from './controllers/screens/PurchaseHistory';
 import ForgotPasswordPage from './controllers/screens/ForgotPasswordPage';
 import TransactionDetails from './controllers/screens/navigations/TransactionDetails';
-
+import PaymentScreen from './controllers/screens/PaymentScreen';
 const Stack = createStackNavigator();
 
 const greyTheme = {
@@ -82,7 +82,7 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="Register"
         component={RegisterScreen}
         options={{
@@ -166,7 +166,7 @@ const StackScreen = () => {
           headerLeft: () => null,
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="ForgotPassword"
         component={ForgotPasswordPage}
         options={{
@@ -227,12 +227,34 @@ const StackScreen = () => {
           ),
         })}
       />
-       <Stack.Screen
+      <Stack.Screen
+        name="PaymentScreen"
+        component={PaymentScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: () => <HeaderWithImage />,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Icon
+                name="arrow-back"
+                size={25}
+                color={greyTheme.textColor}
+                style={{marginLeft: 15}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
         name="TransactionDetails"
         component={TransactionDetails}
         options={({navigation}) => ({
           headerShown: true,
-          headerTitle: () => <HeaderWithImage />,
+          headerTitle: 'Transaction Details',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 16,
+          },
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Icon

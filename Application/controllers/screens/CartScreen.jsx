@@ -6,8 +6,8 @@ import Colors from "../../src/Color";
 import Receipt from './Receipt';
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native'; 
-import { db } from '../components/config'; // Import Firestore config
-import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
+import { db } from '../components/config'; 
+import { doc, getDoc, setDoc } from 'firebase/firestore'; 
 
 const Cart = ({ route }) => {
   const { scannedProduct } = route.params || {};
@@ -123,35 +123,35 @@ const Cart = ({ route }) => {
     time: new Date().toLocaleTimeString()
   };
 
-  // Retrieve the phone number from session
+  
   try {
     const sessionData = await AsyncStorage.getItem('userSession');
     if (sessionData) {
       const userSession = JSON.parse(sessionData);
       const phoneNumber = userSession.phoneNumber;
 
-      // Reference to the user's document in the 'customers' collection
-      const userRef = doc(db, 'purchaseHistory', phoneNumber); // Using phone number as document ID
+      
+      const userRef = doc(db, 'purchaseHistory', phoneNumber); 
       const docSnapshot = await getDoc(userRef);
 
       if (docSnapshot.exists()) {
-        // If user exists, append the new purchase to the existing purchaseHistory
+        
         const existingHistory = docSnapshot.data().purchaseHistory || [];
         await setDoc(userRef, {
           purchaseHistory: [...existingHistory, qrData],
-        }, { merge: true });  // Merge to keep existing data intact
+        }, { merge: true });  
       } else {
-        // If user doesn't exist, create a new document with purchaseHistory
+        
         await setDoc(userRef, {
           purchaseHistory: [qrData],
         });
       }
 
-      // Clear cart and reset state
+      
       setCart([]);
       setTotalBill(0);
 
-      // Navigate to QR code screen with purchase data
+      
       navigation.navigate('qrcode', { qrData });
 
       handleCloseReceipt(); 
